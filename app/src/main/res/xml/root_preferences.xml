@@ -15,6 +15,9 @@
     </PreferenceCategory>
 
     <PreferenceCategory>
+        <EditTextPreference
+            app:key="version"
+            android:title="Version"/>
         <Preference
             app:key="aboutUs"
             app:title="About Us">

@@ -1,12 +1,15 @@
 package com.mobile.plantmanagement;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -15,14 +18,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     SwitchPreferenceCompat appMode;
     Preference aboutUs;
+    EditTextPreference version;
     final String TAG = "Settings";
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
         appMode = findPreference("appMode");
         aboutUs = findPreference("aboutUs");
+        version = findPreference("version");
         // Check the theme settings at the beginning whether dark mode is enabled, and set the title of SwitchPreferenceCompat accordingly to the theme settings
         isDarkMode();
+
+        // Declare application version to version preference
+        String versionName = BuildConfig.VERSION_NAME;
+        version.setSummary((CharSequence) versionName);
 
         aboutUs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
