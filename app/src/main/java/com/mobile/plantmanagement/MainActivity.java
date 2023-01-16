@@ -1,16 +1,13 @@
-package com.mobile.plantmangement;
+package com.mobile.plantmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
-import com.mobile.plantmangement.databinding.ActivityMainBinding;
+import com.mobile.plantmanagement.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 

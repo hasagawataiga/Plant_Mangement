@@ -1,4 +1,4 @@
-package com.mobile.plantmangement;
+package com.mobile.plantmanagement;
 
 import org.junit.Test;
 

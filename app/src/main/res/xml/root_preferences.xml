@@ -1,6 +1,7 @@
 <PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:customAttrs="http://schemas.android.com/apk/res-auto2"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="ResAuto">
 
     <PreferenceCategory app:title="Theme">
@@ -11,6 +12,13 @@
 <!--            app:switchTextOff="0"-->
 
         </SwitchPreferenceCompat>
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:key="aboutUs"
+            app:title="About Us">
+        </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/messages_header">
