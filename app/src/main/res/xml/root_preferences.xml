@@ -7,9 +7,10 @@
     <PreferenceCategory app:title="Theme">
         <SwitchPreferenceCompat
             app:key="appMode"
+            app:switchTextOn="1"
+            app:switchTextOff="0"
             >
-<!--            app:switchTextOn="1"-->
-<!--            app:switchTextOff="0"-->
+
 
         </SwitchPreferenceCompat>
     </PreferenceCategory>
