@@ -1,16 +1,23 @@
 package com.mobile.plantmanagement;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.mobile.plantmanagement.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    final String TAG = "MainActivity";
     ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +30,27 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         fragmentsController();
+
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.back_button_action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        Log.d(TAG, "MenuItem" + item.getItemId() + " back_button" + R.id.back_button);
+        if (item.getItemId() == R.id.back_button){
+            changeFragment(new SettingsFragment());
+//            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fragmentsController(){
