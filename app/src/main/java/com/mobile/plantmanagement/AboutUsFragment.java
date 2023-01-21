@@ -1,12 +1,17 @@
 package com.mobile.plantmanagement;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,7 +26,7 @@ public class AboutUsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private final String TAG = "ABOUT_US";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -59,11 +64,36 @@ public class AboutUsFragment extends Fragment {
     }
 
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.back_button_action_bar, menu);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setHomeButtonEnabled(true);
         return inflater.inflate(R.layout.fragment_about_us, container, false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        MainActivity mainActivity = new MainActivity();
+        Log.d(TAG, "MenuItem" + item.getItemId() + " back_button" + R.id.back_button);
+        if (item.getItemId() == R.id.back_button){
+            mainActivity.changeFragment(new SettingsFragment());
+//            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

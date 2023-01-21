@@ -5,6 +5,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -65,6 +68,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
     }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = get;
+//        inflater.inflate(R.menu.back_button_action_bar, menu);
+//        return true;
+//    }
+
+
 
     private void isDarkMode (){
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){

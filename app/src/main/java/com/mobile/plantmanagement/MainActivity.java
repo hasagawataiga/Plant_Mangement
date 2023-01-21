@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     final String TAG = "MainActivity";
     ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,27 +32,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         fragmentsController();
 
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setHomeButtonEnabled(true);
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.back_button_action_bar, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        Log.d(TAG, "MenuItem" + item.getItemId() + " back_button" + R.id.back_button);
-        if (item.getItemId() == R.id.back_button){
-            changeFragment(new SettingsFragment());
-//            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private void fragmentsController(){
         // Always begin with Home fragment
@@ -76,10 +60,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void changeFragment(Fragment fragment){
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    protected void changeFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout1, fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 //        updateHomeUI();
     }
