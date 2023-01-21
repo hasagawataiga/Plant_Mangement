@@ -10,14 +10,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat{
 
     SwitchPreferenceCompat appMode;
     Preference aboutUs;
@@ -67,15 +69,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
-    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = get;
-//        inflater.inflate(R.menu.back_button_action_bar, menu);
-//        return true;
-//    }
 
+        // Up navigation
+        // Return to settingsFragment when user is at "child" fragment of settingsFragment
+    }
 
 
     private void isDarkMode (){
@@ -90,4 +87,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
 
     }
+
 }
