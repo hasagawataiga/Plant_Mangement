@@ -72,9 +72,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                 return true;
             }
         });
-
-        // Up navigation
-        // Return to settingsFragment when user is at "child" fragment of settingsFragment
     }
 
     @NonNull
