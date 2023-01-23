@@ -70,17 +70,19 @@ public class AboutUsFragment extends Fragment {
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setHomeButtonEnabled(true);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.showDisplayHomeUp();
         return inflater.inflate(R.layout.fragment_about_us, container, false);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        MainActivity mainActivity = new MainActivity();
-        Log.d(TAG, "MenuItem" + item.getItemId() + " back_button" + R.id.back_button);
-        if (item.getItemId() == R.id.back_button){
-            mainActivity.changeFragment(new SettingsFragment());
-//            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+//        MainActivity mainActivity = new MainActivity();
+//        Log.d(TAG, "MenuItem" + item.getItemId() + " back_button" + R.id.back_button);
+//        if (item.getItemId() == R.id.back_button){
+//            mainActivity.changeFragment(new SettingsFragment());
+////            this.finish();
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }

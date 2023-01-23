@@ -58,6 +58,10 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Hide the display home button as up button
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.hideDisplayHomeUp();
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }

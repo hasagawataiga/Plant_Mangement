@@ -26,12 +26,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-//            setTheme(R.style.Theme_PlantManagement_LightMode_Mode);//when dark mode is enabled, we use the dark theme
-//        } else {
-//            setTheme(R.style.Theme_PlantManagement_DarkMode_Mode);  //default app theme
-//        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         fragmentsController();
@@ -39,9 +34,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 //        frameLayout = findViewById(R.id.frameLayout1);
         changeFragment(new HomeFragment());
         // Listen for changes in the back stack of fragments
-        ActionBar actionBar = getSupportActionBar();
         getSupportFragmentManager().addOnBackStackChangedListener(this);
-        // Check whether fragment could go up. Display back_button if yes, otherwise
     }
 
 
@@ -53,40 +46,29 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){
                 case R.id.profile:
-                    Log.d(TAG, "Click profile fragment");
+                    Log.d(TAG, "Binding Click profile fragment");
                     changeFragment(new ProfileFragment());
-//                    hideDisplayHomeUp();
                     break;
                 case R.id.home:
-                    Log.d(TAG, "Click home fragment");
+                    Log.d(TAG, "Binding Click home fragment");
                     changeFragment(new HomeFragment());
-//                    hideDisplayHomeUp();
                     break;
                 case R.id.chart:
-                    Log.d(TAG, "Click chart fragment");
+                    Log.d(TAG, "Binding Click chart fragment");
                     changeFragment(new ChartFragment());
-//                    hideDisplayHomeUp();
                     break;
                 case R.id.settings:
-                    Log.d(TAG, "Click settings fragment");
+                    Log.d(TAG, "Binding Click settings fragment");
                     changeFragment(new SettingsFragment());
                     break;
                 default:
-                    Log.d(TAG, "not matched any fragment id");
+                    Log.d(TAG, "Binding not matched any fragment id");
             }
-            isDisplayHomeUp();
             return true;
         });
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (getFragmentManager().getBackStackEntryCount() > 0) {
-//            getFragmentManager().popBackStack();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
+
 
     protected void changeFragment(Fragment fragment){
         fragmentManager = getSupportFragmentManager();
@@ -103,55 +85,26 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             case android.R.id.home:
                 if(canGoBack()){
                     getSupportFragmentManager().popBackStack();
-
                 }
                 break;
-            case R.id.profile:
-                Log.d(TAG, "Click profile fragment");
-                changeFragment(new ProfileFragment());
-                break;
-            case R.id.home:
-                Log.d(TAG, "Click home fragment");
-                changeFragment(new HomeFragment());
-                break;
-            case R.id.chart:
-                Log.d(TAG, "Click chart fragment");
-                changeFragment(new ChartFragment());
-                break;
-            case R.id.settings:
-                Log.d(TAG, "Click settings fragment");
-                changeFragment(new SettingsFragment());
-                break;
         }
-        isDisplayHomeUp();
+        Log.d(TAG, "onOptionItemSelected clicked.");
         return super.onOptionsItemSelected(item);
     }
 
-    private void hideDisplayHomeUp() {
+    public void hideDisplayHomeUp() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
+    public void showDisplayHomeUp(){getSupportActionBar().setDisplayHomeAsUpEnabled(true);}
 
     @Override
     public void onBackStackChanged() {
         Log.d(TAG, "Click on Up navigation");
-        isDisplayHomeUp();
     }
-    private void isDisplayHomeUp(){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(canGoBack());
-    }
+
     private boolean canGoBack(){
         boolean canGoBack = false;
         canGoBack = getSupportFragmentManager().getBackStackEntryCount() > 0;
         return canGoBack;
     }
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//
-//    }
-//
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        getSupportFragmentManager().popBackStack();
-//        return true;
-//    }
 }
