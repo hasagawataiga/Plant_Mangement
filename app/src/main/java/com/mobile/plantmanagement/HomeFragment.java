@@ -1,13 +1,19 @@
 package com.mobile.plantmanagement;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +31,9 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    DatePicker datePicker;
+    Button home_btn_switcher;
+    boolean isCalenderUsed = false;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -62,8 +71,38 @@ public class HomeFragment extends Fragment {
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        datePicker = view.findViewById(R.id.home_dayPicker);
+        home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
+        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+                int day = datePicker.getDayOfMonth();
+                int month = datePicker.getMonth();
+                int year = datePicker.getYear();
+                String date = day + " " + month + " " + year;
+                Toast.makeText(getContext(),date,Toast.LENGTH_SHORT).show();
+            }
+        });
+        home_btn_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isCalenderUsed){
+                    datePicker.setSpinnersShown(true);
+                    datePicker.setCalendarViewShown(false);
+                    isCalenderUsed = false;
+                }else{
+                    datePicker.setSpinnersShown(false);
+                    datePicker.setCalendarViewShown(true);
+                    isCalenderUsed = true;
+                }
+            }
+        });
+        super.onViewCreated(view, savedInstanceState);
     }
 }

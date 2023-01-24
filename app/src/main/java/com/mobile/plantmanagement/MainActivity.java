@@ -13,15 +13,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
 
 import com.mobile.plantmanagement.databinding.ActivityMainBinding;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     final String TAG = "MainActivity";
     ActivityMainBinding binding;
     FrameLayout frameLayout;
+    DatePicker datePicker;
     FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +35,18 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
         fragmentsController();
 
+//        datePicker = (DatePicker) findViewById(R.id.home_dayPicker);
+//        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+//            @Override
+//            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+//
+//            }
+//        });
 //        frameLayout = findViewById(R.id.frameLayout1);
         changeFragment(new HomeFragment());
         // Listen for changes in the back stack of fragments
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
-
 
 
     private void fragmentsController(){

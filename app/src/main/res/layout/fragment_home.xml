@@ -12,29 +12,30 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:padding="20dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pick up a day"
-            android:layout_marginVertical="20dp"/>
-        <DatePicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:datePickerMode="spinner"
-            android:calendarViewShown="false"
-            android:minDate="01\/01\/2020"
-            android:maxDate="12\/31\/2040"/>
-
-        <DatePicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:datePickerMode="calendar" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="20dp">
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pick up a day"
+                android:layout_marginEnd="20dp"/>
+            <Button
+                android:id="@+id/home_btn_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Switch"/>
         </LinearLayout>
+
+        <DatePicker
+            android:id="@+id/home_dayPicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:maxDate="12\/31\/2040"
+            android:minDate="01\/01\/2020"/>
 
     </LinearLayout>
 
