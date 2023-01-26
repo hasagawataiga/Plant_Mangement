@@ -27,6 +27,14 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
-
+    </string-array>
+    <string-array name="units">
+        <item>kg</item>
+        <item>g</item>
+        <item>ton(s)</item>
+        <item>liter(s)</item>
+        <item>meter square</item>
+        <item>minute(s)</item>
+        <item>hour(s)</item>
     </string-array>
 </resources>
