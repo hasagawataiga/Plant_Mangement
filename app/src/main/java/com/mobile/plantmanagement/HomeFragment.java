@@ -1,10 +1,13 @@
 package com.mobile.plantmanagement;
 
 import android.app.DatePickerDialog;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -13,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /**
@@ -33,6 +38,8 @@ public class HomeFragment extends Fragment {
 
     DatePicker datePicker;
     Button home_btn_switcher;
+    LinearLayout home_linearLayout_componentsContainer;
+    Button home_btn_addComponent;
     boolean isCalenderUsed = false;
     public HomeFragment() {
         // Required empty public constructor
@@ -75,10 +82,13 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         datePicker = view.findViewById(R.id.home_dayPicker);
         home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
+        home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
+
         datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
