@@ -46,14 +46,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <Button
                     android:id="@+id/home_btn_addComponent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
-                    android:onClick="addComponent"
-                    android:text="Add" />
+                    android:text="Add"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/home_linearLayout_componentsContainer"
@@ -76,12 +74,10 @@
                     android:hint="Note here"
                     android:ems="10"
                     android:gravity="start|top"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-
 </FrameLayout>
 
     <!--            <LinearLayout-->

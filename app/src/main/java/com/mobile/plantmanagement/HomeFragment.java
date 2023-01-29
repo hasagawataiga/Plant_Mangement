@@ -11,13 +11,18 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 /**
@@ -40,6 +45,7 @@ public class HomeFragment extends Fragment {
     Button home_btn_switcher;
     LinearLayout home_linearLayout_componentsContainer;
     Button home_btn_addComponent;
+    String[] units;
     boolean isCalenderUsed = false;
     public HomeFragment() {
         // Required empty public constructor
@@ -88,7 +94,7 @@ public class HomeFragment extends Fragment {
         datePicker = view.findViewById(R.id.home_dayPicker);
         home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
         home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
-
+        home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
         datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
@@ -114,5 +120,52 @@ public class HomeFragment extends Fragment {
             }
         });
         super.onViewCreated(view, savedInstanceState);
+        home_btn_addComponent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addComponent();
+            }
+        });
+
+    }
+
+    private void addComponent() {
+        // Init the linearLayout contains the views of component
+        LinearLayout parent = new LinearLayout(getContext());
+        parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        parent.setOrientation(LinearLayout.HORIZONTAL);
+        home_linearLayout_componentsContainer.addView(parent);
+        // Init attributes of component
+        // Delete button
+        ImageButton btn_del = new ImageButton(getContext());
+        btn_del.setLayoutParams(new LinearLayout.LayoutParams(70,70));
+        btn_del.setForegroundGravity(Gravity.CENTER_VERTICAL);
+        btn_del.setBackgroundResource(R.drawable.btn_del);
+        btn_del.setImageResource(R.drawable.ic_baseline_horizontal_rule_24);
+        // Label of component
+        EditText et_component = new EditText(getContext());
+        et_component.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        et_component.setHint("Component");
+        // Details of component
+        EditText et_details = new EditText(getContext());
+        et_details.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        et_details.setHint("amount");
+        et_details.setInputType(InputType.TYPE_CLASS_NUMBER);
+        // Units of component
+        Spinner spinner_unit = new Spinner(getContext());
+        spinner_unit.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        units = getActivity().getResources().getStringArray(R.array.units);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
+        spinner_unit.setAdapter(spinnerArrayAdapter);
+
+
+        parent.addView(btn_del);
+        parent.addView(et_component);
+        parent.addView(et_details);
+        parent.addView(spinner_unit);
+    }
+
+    private void delComponent(){
+
     }
 }

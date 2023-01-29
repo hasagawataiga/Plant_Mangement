@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
         fragmentsController();
 
-        home_linearLayout_componentsContainer = (LinearLayout) findViewById(R.id.home_linearLayout_componentsContainer);
-        Log.d(TAG, "linearLayout id " + home_linearLayout_componentsContainer + " " + home_linearLayout_componentsContainer.getOrientation());
+//        home_linearLayout_componentsContainer = (LinearLayout) findViewById(R.id.home_linearLayout_componentsContainer);
+//        Log.d(TAG, "linearLayout id " + home_linearLayout_componentsContainer + " " + home_linearLayout_componentsContainer.getOrientation());
 
 //        datePicker = (DatePicker) findViewById(R.id.home_dayPicker);
 //        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
@@ -84,20 +84,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         });
     }
 
-    public void addComponent(View view) {
-        // Init the linearLayout contains the views of component
-        LinearLayout parent = new LinearLayout(this);
-        parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        parent.setOrientation(LinearLayout.HORIZONTAL);
-        home_linearLayout_componentsContainer.addView(parent);
-        // Init attributes of component
-        ImageButton btn_del = new ImageButton(this);
-        btn_del.setBackgroundResource(R.drawable.btn_add);
-        btn_del.setImageResource(R.drawable.ic_baseline_add_box_24);
 
-        parent.addView(btn_del);
-
-    }
     protected void changeFragment(Fragment fragment){
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
