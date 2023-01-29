@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     DatePicker datePicker;
     Button home_btn_switcher;
     LinearLayout home_linearLayout_componentsContainer;
-    Button home_btn_addComponent;
+    ImageButton home_btn_addComponent;
     String[] units;
     boolean isCalenderUsed = false;
     final String TAG = "HOME_FRAGMENT";
@@ -98,6 +98,8 @@ public class HomeFragment extends Fragment {
         datePicker = view.findViewById(R.id.home_dayPicker);
         home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
         home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
+        home_btn_addComponent.setBackgroundResource(R.drawable.btn_add);
+        home_btn_addComponent.setImageResource(R.drawable.ic_baseline_add_box_24);
         home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
         datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
@@ -162,6 +164,7 @@ public class HomeFragment extends Fragment {
         units = getActivity().getResources().getStringArray(R.array.units);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
         spinner_unit.setAdapter(spinnerArrayAdapter);
+        // Add those views to container (LinearLayout named parent)
         parent.addView(btn_del);
         parent.addView(et_component);
         parent.addView(et_details);
