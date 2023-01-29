@@ -1,5 +1,7 @@
 package com.mobile.plantmanagement;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.DatePickerDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -12,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +50,7 @@ public class HomeFragment extends Fragment {
     Button home_btn_addComponent;
     String[] units;
     boolean isCalenderUsed = false;
+    final String TAG = "HOME_FRAGMENT";
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -142,6 +146,7 @@ public class HomeFragment extends Fragment {
         btn_del.setForegroundGravity(Gravity.CENTER_VERTICAL);
         btn_del.setBackgroundResource(R.drawable.btn_del);
         btn_del.setImageResource(R.drawable.ic_baseline_horizontal_rule_24);
+
         // Label of component
         EditText et_component = new EditText(getContext());
         et_component.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -157,15 +162,17 @@ public class HomeFragment extends Fragment {
         units = getActivity().getResources().getStringArray(R.array.units);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
         spinner_unit.setAdapter(spinnerArrayAdapter);
-
-
         parent.addView(btn_del);
         parent.addView(et_component);
         parent.addView(et_details);
         parent.addView(spinner_unit);
+        btn_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ViewGroup) parent.getParent()).removeView(parent);
+                Log.d(TAG, "delete button clicked.");
+            }
+        });
     }
 
-    private void delComponent(){
-
-    }
 }
