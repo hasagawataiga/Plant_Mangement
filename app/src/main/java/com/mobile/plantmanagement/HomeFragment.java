@@ -1,16 +1,10 @@
 package com.mobile.plantmanagement;
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
-import android.app.DatePickerDialog;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
