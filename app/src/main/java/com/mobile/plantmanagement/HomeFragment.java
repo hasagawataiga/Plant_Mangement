@@ -47,8 +47,10 @@ public class HomeFragment extends Fragment {
     DatePicker datePicker;
     Button home_btn_switcher;
     LinearLayout home_linearLayout_componentsContainer;
+    EditText home_et_notepad;
     ImageButton home_btn_addComponent;
     String[] units;
+    String datePicked;
     boolean isCalenderUsed = false;
     final String TAG = "HOME_FRAGMENT";
     public HomeFragment() {
@@ -100,15 +102,18 @@ public class HomeFragment extends Fragment {
         home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
         home_btn_addComponent.setBackgroundResource(R.drawable.btn_add);
         home_btn_addComponent.setImageResource(R.drawable.ic_baseline_add_box_24);
+        home_et_notepad = view.findViewById(R.id.home_et_notepad);
         home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
         datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
                 int day = datePicker.getDayOfMonth();
-                int month = datePicker.getMonth();
+                int month = datePicker.getMonth() + 1;
                 int year = datePicker.getYear();
-                String date = day + " " + month + " " + year;
-                Toast.makeText(getContext(),date,Toast.LENGTH_SHORT).show();
+                datePicked = day + " " + month + " " + year;
+                removeAllChildViews(home_linearLayout_componentsContainer);
+                resetNotepad(home_et_notepad);
+                Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
             }
         });
         home_btn_switcher.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +138,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void resetNotepad(EditText editText){
+        editText.setText("");
+    }
+
+    private void removeAllChildViews(ViewGroup viewGroup){
+        viewGroup.removeAllViewsInLayout();
     }
 
     private void addComponent() {

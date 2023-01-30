@@ -61,7 +61,7 @@
                     android:text="Save"
                     android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textStyle="italic" />
+                    android:textStyle="bold|italic" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/home_linearLayout_componentsContainer"
@@ -77,7 +77,7 @@
                 android:background="@color/light_yellow"
                 android:padding="10dp">
                 <EditText
-                    android:id="@+id/editTextTextMultiLine"
+                    android:id="@+id/home_et_notepad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
