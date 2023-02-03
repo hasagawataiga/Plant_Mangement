@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
     namespace 'com.mobile.plantmanagement'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.mobile.plantmanagement"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -34,15 +35,25 @@ android {
 }
 
 dependencies {
-    // Avoid duplicate class lifecycle-viewmodel
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    // CalendarView library
-    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
 
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-firestore'
+
+    // Avoid duplicate class lifecycle-viewmodel
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+//    // CalendarView library
+//    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
+//    implementation 'com.google.firebase:firebase-database:<latest-version>'
+
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference:1.2.0'
+    implementation 'com.google.firebase:firebase-database:20.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

@@ -1,4 +1,5 @@
 package com.mobile.plantmanagement;
+import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -6,6 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviderGetKt;
 
 import android.text.InputType;
 import android.util.Log;
@@ -21,6 +26,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +53,9 @@ public class HomeFragment extends Fragment {
     EditText home_et_notepad;
     ImageButton home_btn_addComponent;
     String[] units;
+    String[] componentList;
+    ArrayAdapter<String> spinnerArrayAdapter;
+    private CalendarViewModel calendarViewModel;
     String datePicked;
     boolean isCalenderUsed = false;
     final String TAG = "HOME_FRAGMENT";
@@ -81,16 +93,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Hide the display home button as up button
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.hideDisplayHomeUp();
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         datePicker = view.findViewById(R.id.home_dayPicker);
         home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
         home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
@@ -98,18 +101,48 @@ public class HomeFragment extends Fragment {
         home_btn_addComponent.setImageResource(R.drawable.ic_baseline_add_box_24);
         home_et_notepad = view.findViewById(R.id.home_et_notepad);
         home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
+        // Hide the display home button as up button
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.hideDisplayHomeUp();
+        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        calendarViewModel.getSelectedDateEvents().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
+            @Override
+            public void onChanged(Map<String, Object> events) {
+                home_linearLayout_componentsContainer.removeAllViews();
+                if (events != null){
+                    for(Map.Entry<String, Object> entry : events.entrySet()){
+                        CalendarEvent event = new CalendarEvent(entry.getKey(), (String) entry.getValue());
+                        String name = event.getName();
+                        String amount = event.getAmount();
+                        String unit = event.getUnit();
+                        addComponent(name, amount, unit);
+                    }
+                }
+            }
+        });
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+//        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
         datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+                removeAllChildViews(home_linearLayout_componentsContainer);
+                resetNotepad(home_et_notepad);
                 int day = datePicker.getDayOfMonth();
                 int month = datePicker.getMonth() + 1;
                 int year = datePicker.getYear();
-                datePicked = day + " " + month + " " + year;
-                removeAllChildViews(home_linearLayout_componentsContainer);
-                resetNotepad(home_et_notepad);
+                datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+                calendarViewModel.retrieveEvents(datePicked);
                 Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
             }
         });
+
         home_btn_switcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,11 +157,13 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
         super.onViewCreated(view, savedInstanceState);
+
         home_btn_addComponent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addComponent();
+                addComponent("", "", "");
             }
         });
 
@@ -142,7 +177,8 @@ public class HomeFragment extends Fragment {
         viewGroup.removeAllViewsInLayout();
     }
 
-    private void addComponent() {
+    public void addComponent(String name, String amount, String unit) {
+        Log.d(TAG, "Starting adding events");
         // Init the linearLayout contains the views of component
         LinearLayout parent = new LinearLayout(getContext());
         parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -157,23 +193,40 @@ public class HomeFragment extends Fragment {
         btn_del.setImageResource(R.drawable.ic_baseline_horizontal_rule_24);
 
         // Label of component
-        EditText et_component = new EditText(getContext());
-        et_component.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        et_component.setHint("Component");
+        Spinner spinner_component = new Spinner(getContext());
+        spinner_component.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        componentList = getActivity().getResources().getStringArray(R.array.components);
+        spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, componentList);
+        spinner_component.setAdapter(spinnerArrayAdapter);
+        if(name != ""){
+            int index = spinnerArrayAdapter.getPosition(name);
+            spinner_component.setSelection(index);
+            Log.d(TAG, "index of label entry" + index);
+        }
+
         // Details of component
         EditText et_details = new EditText(getContext());
         et_details.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         et_details.setHint("amount");
         et_details.setInputType(InputType.TYPE_CLASS_NUMBER);
+        if(amount != ""){
+            et_details.setText(amount);
+        }
+
         // Units of component
         Spinner spinner_unit = new Spinner(getContext());
         spinner_unit.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         units = getActivity().getResources().getStringArray(R.array.units);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
+        spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
         spinner_unit.setAdapter(spinnerArrayAdapter);
+        if(unit != ""){
+            int index2 = spinnerArrayAdapter.getPosition(unit);
+            spinner_unit.setSelection(index2);
+        }
+
         // Add those views to container (LinearLayout named parent)
         parent.addView(btn_del);
-        parent.addView(et_component);
+        parent.addView(spinner_component);
         parent.addView(et_details);
         parent.addView(spinner_unit);
         btn_del.setOnClickListener(new View.OnClickListener() {

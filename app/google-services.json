@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "260375900054",
+    "project_id": "self-mangement",
+    "storage_bucket": "self-mangement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260375900054:android:59c1e7af389fe77ce377b7",
+        "android_client_info": {
+          "package_name": "com.mobile.plantmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260375900054-tgmcvmhujt6ikun5rakltl0rdke3od2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuI-QGQABl3GEl3fVwMXr_KJYQUlx5TRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260375900054-tgmcvmhujt6ikun5rakltl0rdke3od2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
