@@ -40,8 +40,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="50dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,6 +55,7 @@
                     android:layout_marginEnd="100dp"/>
 
                 <TextView
+                    android:id="@+id/home_tv_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Save"
@@ -67,7 +67,6 @@
                 android:id="@+id/home_linearLayout_componentsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="100dp"
                 android:orientation="vertical">
             </LinearLayout>
             <LinearLayout
@@ -75,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="100dp"
                 android:background="@color/light_yellow"
-                android:padding="10dp">
+                android:layout_marginHorizontal="50dp">
                 <EditText
                     android:id="@+id/home_et_notepad"
                     android:layout_width="match_parent"
@@ -87,11 +86,6 @@
                     android:inputType="textMultiLine"/>
             </LinearLayout>
         </LinearLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </FrameLayout>
 

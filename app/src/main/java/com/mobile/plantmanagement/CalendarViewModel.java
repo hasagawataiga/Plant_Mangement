@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -50,6 +51,7 @@ public class CalendarViewModel extends AndroidViewModel {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             selectedDateEvents.setValue((Map<String, Object>) documentSnapshot.getData());
+                            Log.d(TAG, selectedDateEvents.toString());
                         } else {
                             selectedDateEvents.setValue(null);
                         }
@@ -60,6 +62,19 @@ public class CalendarViewModel extends AndroidViewModel {
                     public void onFailure(@NonNull Exception e) {
                         selectedDateEvents.setValue(null);
                         Log.d(TAG, "Error retrieving events", e);
+                    }
+                });
+    }
+
+    public void updateEvents(String date, Map<String, Object> events) {
+        db.collection("Calendar")
+                .document(date)
+                .set(events)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplication().getBaseContext(), "Event saved", Toast.LENGTH_SHORT).show();
+                        Log.d("CalendarViewModel", "Events saved");
                     }
                 });
     }

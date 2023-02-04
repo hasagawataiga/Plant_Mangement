@@ -25,9 +25,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,11 +51,13 @@ public class HomeFragment extends Fragment {
 
     DatePicker datePicker;
     Button home_btn_switcher;
+    TextView home_tv_save;
     LinearLayout home_linearLayout_componentsContainer;
     EditText home_et_notepad;
     ImageButton home_btn_addComponent;
     String[] units;
     String[] componentList;
+    Map <String, Object> events;
     ArrayAdapter<String> spinnerArrayAdapter;
     private CalendarViewModel calendarViewModel;
     String datePicked;
@@ -95,6 +99,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         datePicker = view.findViewById(R.id.home_dayPicker);
+        home_tv_save = view.findViewById(R.id.home_tv_save);
         home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
         home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
         home_btn_addComponent.setBackgroundResource(R.drawable.btn_add);
@@ -115,6 +120,7 @@ public class HomeFragment extends Fragment {
                         String name = event.getName();
                         String amount = event.getAmount();
                         String unit = event.getUnit();
+                        Log.d(TAG, name + ": " + amount + " " + unit);
                         addComponent(name, amount, unit);
                     }
                 }
@@ -129,44 +135,58 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
 //        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
-        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
-                removeAllChildViews(home_linearLayout_componentsContainer);
-                resetNotepad(home_et_notepad);
-                int day = datePicker.getDayOfMonth();
-                int month = datePicker.getMonth() + 1;
-                int year = datePicker.getYear();
-                datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
-                calendarViewModel.retrieveEvents(datePicked);
-                Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
+        datePicker.setOnDateChangedListener((datePicker, i, i1, i2) -> {
+            removeAllChildViews(home_linearLayout_componentsContainer);
+            resetNotepad(home_et_notepad);
+            int day = datePicker.getDayOfMonth();
+            int month = datePicker.getMonth() + 1;
+            int year = datePicker.getYear();
+            datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+            calendarViewModel.retrieveEvents(datePicked);
+            Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
+        });
+
+        home_btn_switcher.setOnClickListener(view12 -> {
+            if(isCalenderUsed){
+                datePicker.setSpinnersShown(true);
+                datePicker.setCalendarViewShown(false);
+                isCalenderUsed = false;
+            }else{
+                datePicker.setSpinnersShown(false);
+                datePicker.setCalendarViewShown(true);
+                isCalenderUsed = true;
             }
         });
 
-        home_btn_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isCalenderUsed){
-                    datePicker.setSpinnersShown(true);
-                    datePicker.setCalendarViewShown(false);
-                    isCalenderUsed = false;
-                }else{
-                    datePicker.setSpinnersShown(false);
-                    datePicker.setCalendarViewShown(true);
-                    isCalenderUsed = true;
-                }
-            }
+        home_btn_addComponent.setOnClickListener(view1 -> addComponent("", "", ""));
+
+        home_tv_save.setOnClickListener(v -> {
+            events = saveEvents();
+            calendarViewModel.updateEvents(datePicked, events);
         });
 
         super.onViewCreated(view, savedInstanceState);
 
-        home_btn_addComponent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addComponent("", "", "");
-            }
-        });
+    }
 
+    private Map<String, Object> saveEvents(){
+        Map <String, Object> events = new HashMap<String, Object>();
+        for (int i = 0; i < home_linearLayout_componentsContainer.getChildCount(); i++){
+            try{
+                LinearLayout linearLayout = (LinearLayout) home_linearLayout_componentsContainer.getChildAt(i);
+                Spinner spinner_name = (Spinner) linearLayout.getChildAt(1);
+                EditText et_amount = (EditText) linearLayout.getChildAt(2);
+                Spinner spinner_unit = (Spinner) linearLayout.getChildAt(3);
+                String name = spinner_name.getSelectedItem().toString();
+                String amount = et_amount.getText().toString();
+                String unit = spinner_unit.getSelectedItem().toString();
+//                CalendarEvent calendarEvent = new CalendarEvent(name, amount + "@" + unit);
+                events.put(name, amount + "@" + unit);
+            }catch(Exception e){
+                Log.d(TAG, "Error saving events", e);
+            }
+        }
+        return events;
     }
 
     private void resetNotepad(EditText editText){
@@ -198,6 +218,7 @@ public class HomeFragment extends Fragment {
         componentList = getActivity().getResources().getStringArray(R.array.components);
         spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, componentList);
         spinner_component.setAdapter(spinnerArrayAdapter);
+        spinner_component.setGravity(Gravity.LEFT);
         if(name != ""){
             int index = spinnerArrayAdapter.getPosition(name);
             spinner_component.setSelection(index);
@@ -219,6 +240,7 @@ public class HomeFragment extends Fragment {
         units = getActivity().getResources().getStringArray(R.array.units);
         spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
         spinner_unit.setAdapter(spinnerArrayAdapter);
+        spinner_unit.setGravity(Gravity.RIGHT);
         if(unit != ""){
             int index2 = spinnerArrayAdapter.getPosition(unit);
             spinner_unit.setSelection(index2);
