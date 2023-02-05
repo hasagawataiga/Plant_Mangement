@@ -32,7 +32,7 @@ public class CalendarViewModel extends AndroidViewModel {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private MutableLiveData<Map<String, Object>> selectedDateEvents = new MutableLiveData<>();
-    private List<CalendarEvent> eventList = new ArrayList<>();
+    private MutableLiveData<Map<String, Object>> selectedDateNotes = new MutableLiveData<>();
 
     public CalendarViewModel(@NonNull Application application) {
         super(application);
@@ -40,6 +40,32 @@ public class CalendarViewModel extends AndroidViewModel {
 
     public MutableLiveData<Map<String, Object>> getSelectedDateEvents() {
         return selectedDateEvents;
+    }
+    public MutableLiveData<Map<String, Object>> getSelectedDateNotes(){
+        return selectedDateNotes;
+    }
+    public void retrieveNotes(String date){
+        db.collection("Notes")
+                .document(date)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            selectedDateNotes.setValue((Map<String, Object>) documentSnapshot.getData());
+                            Log.d(TAG, selectedDateNotes.toString());
+                        } else {
+                            selectedDateNotes.setValue(null);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        selectedDateNotes.setValue(null);
+                        Log.d(TAG, "Error retrieving notes", e);
+                    }
+                });
     }
 
     public void retrieveEvents(String date) {
@@ -66,6 +92,19 @@ public class CalendarViewModel extends AndroidViewModel {
                 });
     }
 
+    public void updateNotes(String date, Map<String, Object> notes){
+        db.collection("Notes")
+                .document(date)
+                .set(notes)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplication().getBaseContext(), "Notes saved", Toast.LENGTH_SHORT).show();
+                        Log.d("CalendarViewModel", "Notes saved");
+                    }
+                });
+    }
+
     public void updateEvents(String date, Map<String, Object> events) {
         db.collection("Calendar")
                 .document(date)
@@ -79,31 +118,31 @@ public class CalendarViewModel extends AndroidViewModel {
                 });
     }
 
-    public List<CalendarEvent> getEventsList(String date){
-        db.collection("Calendar").document(date).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Map<String, Object> data = documentSnapshot.getData();
-                        if(documentSnapshot.exists()){
-                            for(Map.Entry<String, Object> entry : data.entrySet()){
-                                CalendarEvent event = new CalendarEvent(entry.getKey(), (String) entry.getValue());
-                                eventList.add(event);
-                            }
-                            Log.d(TAG, "CalendarEvent list: " + eventList.toString());
-                        }else{
-                            Log.d(TAG, "Document is not existed.");
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error getting document: ", e);
-                    }
-                });
-        return eventList;
-    }
+//    public List<CalendarEvent> getEventsList(String date){
+//        db.collection("Calendar").document(date).get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                        Map<String, Object> data = documentSnapshot.getData();
+//                        if(documentSnapshot.exists()){
+//                            for(Map.Entry<String, Object> entry : data.entrySet()){
+//                                CalendarEvent event = new CalendarEvent(entry.getKey(), (String) entry.getValue());
+//                                eventList.add(event);
+//                            }
+//                            Log.d(TAG, "CalendarEvent list: " + eventList.toString());
+//                        }else{
+//                            Log.d(TAG, "Document is not existed.");
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d(TAG, "Error getting document: ", e);
+//                    }
+//                });
+//        return eventList;
+//    }
 
 //    public LiveData<List<CalendarEvent>> getEvents(String date){
 //        db.collection("Calendar").document(date).get()

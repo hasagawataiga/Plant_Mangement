@@ -1,5 +1,4 @@
 package com.mobile.plantmanagement;
-import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -7,10 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviderGetKt;
 
 import android.text.InputType;
 import android.util.Log;
@@ -28,9 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +53,7 @@ public class HomeFragment extends Fragment {
     String[] units;
     String[] componentList;
     Map <String, Object> events;
+    Map <String, Object> notes;
     ArrayAdapter<String> spinnerArrayAdapter;
     private CalendarViewModel calendarViewModel;
     String datePicked;
@@ -110,10 +106,21 @@ public class HomeFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        calendarViewModel.getSelectedDateNotes().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
+            @Override
+            public void onChanged(Map<String, Object> notes) {
+                resetNotepad(home_et_notepad);
+                if (notes != null){
+                    CalendarNotes calendarNotes = new CalendarNotes(notes.get("content"));
+                    home_et_notepad.setText(calendarNotes.getContent());
+                    Log.d(TAG, "Get notes: " + calendarNotes.getContent());
+                }
+            }
+        });
         calendarViewModel.getSelectedDateEvents().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(Map<String, Object> events) {
-                home_linearLayout_componentsContainer.removeAllViews();
+                removeAllChildViews(home_linearLayout_componentsContainer);
                 if (events != null){
                     for(Map.Entry<String, Object> entry : events.entrySet()){
                         CalendarEvent event = new CalendarEvent(entry.getKey(), (String) entry.getValue());
@@ -141,6 +148,7 @@ public class HomeFragment extends Fragment {
             resetNotepad(home_et_notepad);
             getDatePicked(datePicker);
             calendarViewModel.retrieveEvents(datePicked);
+            calendarViewModel.retrieveNotes(datePicked);
             Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
         });
 
@@ -159,8 +167,10 @@ public class HomeFragment extends Fragment {
         home_btn_addComponent.setOnClickListener(view1 -> addComponent("", "", ""));
 
         home_tv_save.setOnClickListener(v -> {
-            events = saveEvents();
+            events = saveAllEvents();
             calendarViewModel.updateEvents(datePicked, events);
+            notes = saveAllNotes();
+            calendarViewModel.updateNotes(datePicked, notes);
         });
 
         super.onViewCreated(view, savedInstanceState);
@@ -174,7 +184,17 @@ public class HomeFragment extends Fragment {
         datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
     }
 
-    private Map<String, Object> saveEvents(){
+    private Map<String, Object> saveAllNotes(){
+        Map<String, Object> notes = new HashMap<>();
+        try{
+            notes.put("content", home_et_notepad.getText().toString());
+        }catch (Exception e){
+            Log.d(TAG, "Error saving Notes content", e);
+        }
+        return notes;
+    }
+
+    private Map<String, Object> saveAllEvents(){
         Map <String, Object> events = new HashMap<String, Object>();
         for (int i = 0; i < home_linearLayout_componentsContainer.getChildCount(); i++){
             try{
@@ -188,7 +208,7 @@ public class HomeFragment extends Fragment {
 //                CalendarEvent calendarEvent = new CalendarEvent(name, amount + "@" + unit);
                 events.put(name, amount + "@" + unit);
             }catch(Exception e){
-                Log.d(TAG, "Error saving events", e);
+                Log.d(TAG, "Error saving events and notes", e);
             }
         }
         return events;
