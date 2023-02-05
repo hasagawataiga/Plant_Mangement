@@ -133,15 +133,13 @@ public class HomeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+        // get the date of datePicker view when the fragment firstly initialize
+        getDatePicked(datePicker);
 //        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
         datePicker.setOnDateChangedListener((datePicker, i, i1, i2) -> {
             removeAllChildViews(home_linearLayout_componentsContainer);
             resetNotepad(home_et_notepad);
-            int day = datePicker.getDayOfMonth();
-            int month = datePicker.getMonth() + 1;
-            int year = datePicker.getYear();
-            datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+            getDatePicked(datePicker);
             calendarViewModel.retrieveEvents(datePicked);
             Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
         });
@@ -167,6 +165,13 @@ public class HomeFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
+    }
+
+    private void getDatePicked(DatePicker datePicker){
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth() + 1;
+        int year = datePicker.getYear();
+        datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
     }
 
     private Map<String, Object> saveEvents(){
