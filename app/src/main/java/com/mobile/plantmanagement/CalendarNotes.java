@@ -13,7 +13,6 @@ public class CalendarNotes {
             Log.d(TAG, "Content is not of type String");
         }
     }
-
     public CalendarNotes(String name, String content) {
         this.name = name;
         this.content = content;

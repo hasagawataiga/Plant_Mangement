@@ -43,22 +43,30 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    // Declaration of views in Layout
     DatePicker datePicker;
     Button home_btn_switcher;
     TextView home_tv_save;
     LinearLayout home_linearLayout_componentsContainer;
     EditText home_et_notepad;
     ImageButton home_btn_addComponent;
+
+    // Declaration of string-array for spinners
     String[] units;
     String[] componentList;
+    ArrayAdapter<String> spinnerArrayAdapter;
+
+    // Declaration of storing sets (events and notes)
     Map <String, Object> events;
     Map <String, Object> notes;
-    ArrayAdapter<String> spinnerArrayAdapter;
     private CalendarViewModel calendarViewModel;
+
     String datePicked;
+
+    // Switcher between CalendarView spinner/calendar
     boolean isCalenderUsed = false;
     final String TAG = "HOME_FRAGMENT";
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -105,6 +113,8 @@ public class HomeFragment extends Fragment {
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
+
+        // LiveData declaration
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
         calendarViewModel.getSelectedDateNotes().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
@@ -142,16 +152,18 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // get the date of datePicker view when the fragment firstly initialize
         getDatePicked(datePicker);
-//        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
         datePicker.setOnDateChangedListener((datePicker, i, i1, i2) -> {
+            // Reset all views of events/notes
             removeAllChildViews(home_linearLayout_componentsContainer);
             resetNotepad(home_et_notepad);
             getDatePicked(datePicker);
+            // Retrieve data from database to ViewModel
             calendarViewModel.retrieveEvents(datePicked);
             calendarViewModel.retrieveNotes(datePicked);
             Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
         });
 
+        // Switcher for the type of CalendarView
         home_btn_switcher.setOnClickListener(view12 -> {
             if(isCalenderUsed){
                 datePicker.setSpinnersShown(true);
@@ -164,6 +176,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Add below "add" button a column as a component
         home_btn_addComponent.setOnClickListener(view1 -> addComponent("", "", ""));
 
         home_tv_save.setOnClickListener(v -> {
@@ -174,13 +187,13 @@ public class HomeFragment extends Fragment {
         });
 
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     private void getDatePicked(DatePicker datePicker){
         int day = datePicker.getDayOfMonth();
         int month = datePicker.getMonth() + 1;
         int year = datePicker.getYear();
+        // Format the date to be always as YYYY-MM-DD
         datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
     }
 
@@ -205,7 +218,6 @@ public class HomeFragment extends Fragment {
                 String name = spinner_name.getSelectedItem().toString();
                 String amount = et_amount.getText().toString();
                 String unit = spinner_unit.getSelectedItem().toString();
-//                CalendarEvent calendarEvent = new CalendarEvent(name, amount + "@" + unit);
                 events.put(name, amount + "@" + unit);
             }catch(Exception e){
                 Log.d(TAG, "Error saving events and notes", e);
@@ -222,20 +234,32 @@ public class HomeFragment extends Fragment {
         viewGroup.removeAllViewsInLayout();
     }
 
+
+    // Add a linearLayout included a button, a spinner, an editText, and a spinner
     public void addComponent(String name, String amount, String unit) {
         Log.d(TAG, "Starting adding events");
+
         // Init the linearLayout contains the views of component
         LinearLayout parent = new LinearLayout(getContext());
         parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         parent.setOrientation(LinearLayout.HORIZONTAL);
         home_linearLayout_componentsContainer.addView(parent);
+
         // Init attributes of component
-        // Delete button
+        // deleteButton
         ImageButton btn_del = new ImageButton(getContext());
         btn_del.setLayoutParams(new LinearLayout.LayoutParams(70,70));
         btn_del.setForegroundGravity(Gravity.CENTER_VERTICAL);
         btn_del.setBackgroundResource(R.drawable.btn_del);
         btn_del.setImageResource(R.drawable.ic_baseline_horizontal_rule_24);
+        // remove all views of the column onClickListener
+        btn_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ViewGroup) parent.getParent()).removeView(parent);
+                Log.d(TAG, "delete button clicked.");
+            }
+        });
 
         // Label of component
         Spinner spinner_component = new Spinner(getContext());
@@ -244,6 +268,7 @@ public class HomeFragment extends Fragment {
         spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, componentList);
         spinner_component.setAdapter(spinnerArrayAdapter);
         spinner_component.setGravity(Gravity.LEFT);
+        // Set the value of spinner if there is already event was saved on the date
         if(name != ""){
             int index = spinnerArrayAdapter.getPosition(name);
             spinner_component.setSelection(index);
@@ -255,6 +280,7 @@ public class HomeFragment extends Fragment {
         et_details.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         et_details.setHint("amount");
         et_details.setInputType(InputType.TYPE_CLASS_NUMBER);
+        // Set the value of editText if there is already event was saved on the date
         if(amount != ""){
             et_details.setText(amount);
         }
@@ -266,6 +292,7 @@ public class HomeFragment extends Fragment {
         spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
         spinner_unit.setAdapter(spinnerArrayAdapter);
         spinner_unit.setGravity(Gravity.RIGHT);
+        // Set the value of spinner if there is already event was saved on the date
         if(unit != ""){
             int index2 = spinnerArrayAdapter.getPosition(unit);
             spinner_unit.setSelection(index2);
@@ -276,13 +303,5 @@ public class HomeFragment extends Fragment {
         parent.addView(spinner_component);
         parent.addView(et_details);
         parent.addView(spinner_unit);
-        btn_del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((ViewGroup) parent.getParent()).removeView(parent);
-                Log.d(TAG, "delete button clicked.");
-            }
-        });
     }
-
 }
