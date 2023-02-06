@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,7 +34,8 @@ public class CalendarViewModel extends AndroidViewModel {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private MutableLiveData<Map<String, Object>> selectedDateEvents = new MutableLiveData<>();
     private MutableLiveData<Map<String, Object>> selectedDateNotes = new MutableLiveData<>();
-
+    private CollectionReference calendarCollection = db.collection("Calendar");
+    private CollectionReference notesCollection = db.collection("Notes");
     public CalendarViewModel(@NonNull Application application) {
         super(application);
     }
@@ -44,8 +46,9 @@ public class CalendarViewModel extends AndroidViewModel {
     public MutableLiveData<Map<String, Object>> getSelectedDateNotes(){
         return selectedDateNotes;
     }
+
     public void retrieveNotes(String date){
-        db.collection("Notes")
+        notesCollection
                 .document(date)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -69,7 +72,7 @@ public class CalendarViewModel extends AndroidViewModel {
     }
 
     public void retrieveEvents(String date) {
-        db.collection("Calendar")
+        calendarCollection
                 .document(date)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -93,7 +96,7 @@ public class CalendarViewModel extends AndroidViewModel {
     }
 
     public void updateNotes(String date, Map<String, Object> notes){
-        db.collection("Notes")
+        notesCollection
                 .document(date)
                 .set(notes)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -106,7 +109,7 @@ public class CalendarViewModel extends AndroidViewModel {
     }
 
     public void updateEvents(String date, Map<String, Object> events) {
-        db.collection("Calendar")
+        calendarCollection
                 .document(date)
                 .set(events)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
