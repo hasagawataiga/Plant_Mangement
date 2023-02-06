@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,6 +99,11 @@ public class HomeFragment extends Fragment {
         home_btn_addComponent.setImageResource(R.drawable.ic_baseline_add_box_24);
         home_et_notepad = view.findViewById(R.id.home_et_notepad);
         home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
+
+        // Set the date picked always be the current day in real-time
+        Calendar calendar = Calendar.getInstance();
+        datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
         datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {

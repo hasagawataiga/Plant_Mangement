@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.mobile.plantmanagement'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.mobile.plantmanagement"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -37,7 +37,7 @@ dependencies {
     // Avoid duplicate class lifecycle-viewmodel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     // CalendarView library
-    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
+//    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
 
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
