@@ -117,15 +117,13 @@ public class HomeFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
 
-        // LiveData declaration
-        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
-        calendarViewModel.getSelectedDateNotes().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
-
         // Set the date picked always be the current day in real-time
 //        Calendar calendar = Calendar.getInstance();
 //        datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-//        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+        // LiveData declaration
+        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        calendarViewModel.getSelectedDateNotes().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(Map<String, Object> notes) {
                 resetNotepad(home_et_notepad);

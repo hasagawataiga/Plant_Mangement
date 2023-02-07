@@ -6,9 +6,46 @@
     tools:context=".ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Profile" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_currentDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current date and time"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <HorizontalScrollView
+            android:id="@+id/scrollView_horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Add weather data every 2 hours here -->
+
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/tv_next7Days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next 7 Days Weather Forecast"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/lv_weatherForecase"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Add weather data for next 7 days here -->
+
+        </ListView>
+    </LinearLayout>
+
 
 </FrameLayout>

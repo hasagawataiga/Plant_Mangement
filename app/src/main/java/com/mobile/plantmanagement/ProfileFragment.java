@@ -1,5 +1,6 @@
 package com.mobile.plantmanagement;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +23,12 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private TextView tv_currentDateTime;
+    private HorizontalScrollView scrollView_horizontalScrollView;
+    private TextView tv_next7Days;
+    private ListView lv_weatherForeCast;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -55,14 +65,21 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
 
+        tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
+        scrollView_horizontalScrollView = view.findViewById(R.id.scrollView_horizontalScrollView);
+        tv_next7Days = view.findViewById(R.id.tv_next7Days);
+        lv_weatherForeCast = view.findViewById(R.id.lv_weatherForecase);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return view;
     }
 }
