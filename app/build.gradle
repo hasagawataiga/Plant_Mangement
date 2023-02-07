@@ -40,6 +40,9 @@ dependencies {
 //    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     // CalendarView library
 //    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
+    // Retrofit library
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:31.2.0')

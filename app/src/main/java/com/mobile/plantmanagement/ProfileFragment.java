@@ -5,12 +5,21 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.mobile.plantmanagement.api.*;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,12 +32,16 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private final String TAG = "PROFILE";
     private TextView tv_currentDateTime;
     private HorizontalScrollView scrollView_horizontalScrollView;
     private TextView tv_next7Days;
     private ListView lv_weatherForeCast;
 
+    private double longitude = 21.01;
+    private double latitude = 52.23;
+    private String appid = "339d49519e5ba2bd213c20c5f73c1a29";
+    private String units = "imperial";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -78,6 +91,35 @@ public class ProfileFragment extends Fragment {
         scrollView_horizontalScrollView = view.findViewById(R.id.scrollView_horizontalScrollView);
         tv_next7Days = view.findViewById(R.id.tv_next7Days);
         lv_weatherForeCast = view.findViewById(R.id.lv_weatherForecase);
+
+        // HTTPS Request handle
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.openweathermap.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WeatherAPI weatherAPI = retrofit.create(WeatherAPI.class);
+
+        Call<WeatherResponse> call = weatherAPI.getWeather(latitude, longitude, appid, units);
+
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Status code: " +  response.code());
+                    // handle the response and update the UI
+                } else {
+                    Log.d(TAG, "Get response failed. Status code: " + response.code());
+                    // handle the error
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                // handle the failure
+                Log.d(TAG, "Error calling API " + t.getMessage());
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
