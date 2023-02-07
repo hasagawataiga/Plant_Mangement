@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Calendar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,6 +99,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class HomeFragment extends Fragment {
         home_btn_addComponent.setImageResource(R.drawable.ic_baseline_add_box_24);
         home_et_notepad = view.findViewById(R.id.home_et_notepad);
         home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
+
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
@@ -117,6 +120,12 @@ public class HomeFragment extends Fragment {
         // LiveData declaration
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
         calendarViewModel.getSelectedDateNotes().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
+
+        // Set the date picked always be the current day in real-time
+//        Calendar calendar = Calendar.getInstance();
+//        datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+//        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
             public void onChanged(Map<String, Object> notes) {
                 resetNotepad(home_et_notepad);
