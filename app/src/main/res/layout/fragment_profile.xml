@@ -24,9 +24,12 @@
             android:id="@+id/scrollView_horizontalScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_weatherContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <!-- Add weather data every 2 hours here -->
-
+            </androidx.recyclerview.widget.RecyclerView>
         </HorizontalScrollView>
 
         <TextView

@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class WeatherRainProbability {
     @SerializedName("pop")
-    private int pop;
+    private String pop;
 
-    public int getPop() {
+    public String getPop() {
         return pop;
     }
 
-    public void setPop(int pop) {
+    public void setPop(String pop) {
         this.pop = pop;
     }
 }

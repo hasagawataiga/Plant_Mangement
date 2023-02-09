@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mobile.plantmanagement.api.*;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,14 +39,17 @@ public class ProfileFragment extends Fragment {
     private final String TAG = "PROFILE";
     private TextView tv_currentDateTime;
     private HorizontalScrollView scrollView_horizontalScrollView;
+    private RecyclerView recyclerView_weatherContainer;
     private TextView tv_next7Days;
     private ListView lv_weatherForeCast;
 
+    private WeatherAdapter weatherAdapter;
     private double longitude = 21.01;
     private double latitude = 52.23;
     private String appid = "339d49519e5ba2bd213c20c5f73c1a29";
     private String units = "imperial";
 
+    private List<WeatherData> weatherDataList;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -89,6 +96,7 @@ public class ProfileFragment extends Fragment {
 
         tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
         scrollView_horizontalScrollView = view.findViewById(R.id.scrollView_horizontalScrollView);
+        recyclerView_weatherContainer = view.findViewById(R.id.recyclerView_weatherContainer);
         tv_next7Days = view.findViewById(R.id.tv_next7Days);
         lv_weatherForeCast = view.findViewById(R.id.lv_weatherForecase);
 
@@ -108,6 +116,9 @@ public class ProfileFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "Status code: " +  response.code());
                     // handle the response and update the UI
+                    WeatherResponse weatherResponse = response.body();
+                    weatherDataList = weatherResponse.getWeatherDataList();
+                    Log.d(TAG, "Get weatherDataList successful");
                 } else {
                     Log.d(TAG, "Get response failed. Status code: " + response.code());
                     // handle the error
@@ -121,6 +132,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView_weatherContainer.setAdapter(weatherAdapter);
+        recyclerView_weatherContainer.setHasFixedSize(true);
+        weatherAdapter.setWeatherDataList(weatherDataList);
+        weatherAdapter.notifyDataSetChanged();
         // Inflate the layout for this fragment
         return view;
     }

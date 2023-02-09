@@ -15,7 +15,7 @@ public class WeatherData {
     private WeatherCloud weatherCloud;
 
     @SerializedName("pop")
-    private  WeatherRainProbability weatherRainProbability;
+    private float weatherRainProbability;
 
     @SerializedName("dt_txt")
     private String dateTime;
@@ -44,11 +44,11 @@ public class WeatherData {
         this.weatherCloud = weatherCloud;
     }
 
-    public WeatherRainProbability getWeatherRainProbability() {
+    public float getWeatherRainProbability() {
         return weatherRainProbability;
     }
 
-    public void setWeatherRainProbability(WeatherRainProbability weatherRainProbability) {
+    public void setWeatherRainProbability(float weatherRainProbability) {
         this.weatherRainProbability = weatherRainProbability;
     }
 
