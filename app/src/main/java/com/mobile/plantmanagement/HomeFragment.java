@@ -24,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Calendar;
 
 import java.util.HashMap;
 import java.util.Map;

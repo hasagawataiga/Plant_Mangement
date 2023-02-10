@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
         fragmentsController();
 
-        changeFragment(new HomeFragment());
+        changeFragment(new ProfileFragment());
         // Listen for changes in the back stack of fragments
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }

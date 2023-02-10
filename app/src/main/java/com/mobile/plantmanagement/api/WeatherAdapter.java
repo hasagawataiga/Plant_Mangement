@@ -40,14 +40,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     public void onBindViewHolder(@NonNull WeatherViewHolder holder, int position) {
         WeatherData weatherData = weatherDataList.get(position);
         Picasso.get()
-                .load("http://openweathermap.org/img/wn/" + weatherData.getWeatherWeatherList().get(0).getIcon() + "@2x.png")
+                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@2x.png")
                 .into(holder.getIcon());
-        holder.getTime().setText(weatherData.getDateTime());
-        holder.getTemperature().setText(Float.toString(weatherData.getWeatherMainData().getTemperature()));
-        holder.getFeelLike().setText(Float.toString(weatherData.getWeatherMainData().getTemperature()));
-        holder.getHumidity().setText(Integer.toString(weatherData.getWeatherMainData().getHumidity()));
-        holder.getCloudPercentage().setText(weatherData.getWeatherCloud().getAll());
-        holder.getRainProbability().setText(Float.toString(weatherData.getWeatherRainProbability()));
+        holder.getTime().setText(weatherData.getTime());
+        holder.getTemperature().setText(Float.toString(weatherData.getTemp()));
+        holder.getFeelLike().setText(Float.toString(weatherData.getFeelsLike()));
+        holder.getHumidity().setText(Integer.toString(weatherData.getHumidity()));
+        holder.getCloudPercentage().setText(weatherData.getClouds());
+        holder.getRainProbability().setText(Float.toString(weatherData.getRainProbability()));
     }
 
     @Override

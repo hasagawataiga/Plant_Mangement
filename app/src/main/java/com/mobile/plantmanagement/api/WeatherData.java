@@ -1,62 +1,127 @@
 package com.mobile.plantmanagement.api;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
 public class WeatherData {
-    @SerializedName("main")
-    private WeatherMainData weatherMainData;
+    private float temp;
+    private float feelsLike;
+    private float tempMin;
+    private float tempMax;
+    private int humidity;
+    private String descriptionLabel;
+    private String descriptionDetail;
+    private String icon;
+    private int clouds;
+    private float windSpeed;
+    private float rainProbability;
+    private String time;
 
-    @SerializedName("weather")
-    private List<WeatherWeather> weatherWeatherList;
-
-    @SerializedName("cloud")
-    private WeatherCloud weatherCloud;
-
-    @SerializedName("pop")
-    private float weatherRainProbability;
-
-    @SerializedName("dt_txt")
-    private String dateTime;
-
-    public WeatherMainData getWeatherMainData() {
-        return weatherMainData;
+    public WeatherData(float temp, float feelsLike, float tempMin, float tempMax, int humidity, String descriptionLabel, String descriptionDetail, String icon, int clouds, float windSpeed, float rainProbability, String time) {
+        this.temp = temp;
+        this.feelsLike = feelsLike;
+        this.tempMin = tempMin;
+        this.tempMax = tempMax;
+        this.humidity = humidity;
+        this.descriptionLabel = descriptionLabel;
+        this.descriptionDetail = descriptionDetail;
+        this.icon = icon;
+        this.clouds = clouds;
+        this.windSpeed = windSpeed;
+        this.rainProbability = rainProbability;
+        this.time = time;
     }
 
-    public void setWeatherMainData(WeatherMainData weatherMainData) {
-        this.weatherMainData = weatherMainData;
+    public float getTemp() {
+        return temp;
     }
 
-    public List<WeatherWeather> getWeatherWeatherList() {
-        return weatherWeatherList;
+    public void setTemp(float temp) {
+        this.temp = temp;
     }
 
-    public void setWeatherWeatherList(List<WeatherWeather> weatherWeatherList) {
-        this.weatherWeatherList = weatherWeatherList;
+    public float getFeelsLike() {
+        return feelsLike;
     }
 
-    public WeatherCloud getWeatherCloud() {
-        return weatherCloud;
+    public void setFeelsLike(float feelsLike) {
+        this.feelsLike = feelsLike;
     }
 
-    public void setWeatherCloud(WeatherCloud weatherCloud) {
-        this.weatherCloud = weatherCloud;
+    public float getTempMin() {
+        return tempMin;
     }
 
-    public float getWeatherRainProbability() {
-        return weatherRainProbability;
+    public void setTempMin(float tempMin) {
+        this.tempMin = tempMin;
     }
 
-    public void setWeatherRainProbability(float weatherRainProbability) {
-        this.weatherRainProbability = weatherRainProbability;
+    public float getTempMax() {
+        return tempMax;
     }
 
-    public String getDateTime() {
-        return dateTime;
+    public void setTempMax(float tempMax) {
+        this.tempMax = tempMax;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+    public int getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
+
+    public String getDescriptionLabel() {
+        return descriptionLabel;
+    }
+
+    public void setDescriptionLabel(String descriptionLabel) {
+        this.descriptionLabel = descriptionLabel;
+    }
+
+    public String getDescriptionDetail() {
+        return descriptionDetail;
+    }
+
+    public void setDescriptionDetail(String descriptionDetail) {
+        this.descriptionDetail = descriptionDetail;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public int getClouds() {
+        return clouds;
+    }
+
+    public void setClouds(int clouds) {
+        this.clouds = clouds;
+    }
+
+    public float getWindSpeed() {
+        return windSpeed;
+    }
+
+    public void setWindSpeed(float windSpeed) {
+        this.windSpeed = windSpeed;
+    }
+
+    public float getRainProbability() {
+        return rainProbability;
+    }
+
+    public void setRainProbability(float rainProbability) {
+        this.rainProbability = rainProbability;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
