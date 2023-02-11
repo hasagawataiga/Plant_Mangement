@@ -43,7 +43,7 @@ public class WeatherResponse {
         @SerializedName("main")
         private WeatherMainData weatherMainData;
         @SerializedName("weather")
-        private WeatherDescription weatherDescription;
+        private List<WeatherDescription> weatherDescriptionList;
         @SerializedName("clouds")
         private Clouds clouds;
         @SerializedName("wind")
@@ -51,7 +51,7 @@ public class WeatherResponse {
         @SerializedName("visibility")
         private int visibility;
         @SerializedName("pop")
-        private int pop;
+        private float pop;
         @SerializedName("sys")
         private WeatherSys weatherSys;
         @SerializedName("dt_txt")
@@ -65,8 +65,8 @@ public class WeatherResponse {
             return weatherMainData;
         }
 
-        public WeatherDescription getWeatherDescription() {
-            return weatherDescription;
+        public List<WeatherDescription> getWeatherDescription() {
+            return weatherDescriptionList;
         }
 
         public Clouds getClouds() {
@@ -81,7 +81,7 @@ public class WeatherResponse {
             return visibility;
         }
 
-        public int getPop() {
+        public float getPop() {
             return pop;
         }
 

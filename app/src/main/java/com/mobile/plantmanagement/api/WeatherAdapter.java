@@ -20,7 +20,7 @@ import java.util.List;
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     private List<WeatherData> weatherDataList;
-
+    private static final int weather_display_template = R.layout.weather_display_template;
     public WeatherAdapter (List<WeatherData> weatherDataList){
         this.weatherDataList = weatherDataList;
     }
@@ -46,7 +46,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
         holder.getTemperature().setText(Float.toString(weatherData.getTemp()));
         holder.getFeelLike().setText(Float.toString(weatherData.getFeelsLike()));
         holder.getHumidity().setText(Integer.toString(weatherData.getHumidity()));
-        holder.getCloudPercentage().setText(weatherData.getClouds());
+        holder.getCloudPercentage().setText(Integer.toString(weatherData.getClouds()));
         holder.getRainProbability().setText(Float.toString(weatherData.getRainProbability()));
     }
 

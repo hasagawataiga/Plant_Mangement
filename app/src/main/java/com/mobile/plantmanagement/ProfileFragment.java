@@ -3,7 +3,11 @@ package com.mobile.plantmanagement;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,15 +44,11 @@ public class ProfileFragment extends Fragment implements WeatherCallback{
     private TextView tv_currentDateTime;
     private HorizontalScrollView scrollView_horizontalScrollView;
     private RecyclerView recyclerView_weatherContainer;
-    private TextView tv_next7Days;
-    private ListView lv_weatherForeCast;
 
+    private WeatherFetcher weatherFetcher;
     private WeatherAdapter weatherAdapter;
-//    private double longitude = 21.01;
-//    private double latitude = 52.23;
-//    private String appid = "339d49519e5ba2bd213c20c5f73c1a29";
-//    private String units = "metric";
-//    private List<WeatherData> weatherDataList;
+    private WeatherViewModel weatherViewModel;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -82,9 +82,10 @@ public class ProfileFragment extends Fragment implements WeatherCallback{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,66 +97,37 @@ public class ProfileFragment extends Fragment implements WeatherCallback{
         tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
         scrollView_horizontalScrollView = view.findViewById(R.id.scrollView_horizontalScrollView);
         recyclerView_weatherContainer = view.findViewById(R.id.recyclerView_weatherContainer);
-        tv_next7Days = view.findViewById(R.id.tv_next7Days);
-        lv_weatherForeCast = view.findViewById(R.id.lv_weatherForecase);
 
+
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+        weatherFetcher = new WeatherFetcher();
+        weatherFetcher.fetchWeatherData(this);
+        weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), new Observer<List<WeatherData>>() {
+            @Override
+            public void onChanged(List<WeatherData> weatherDataList) {
+                weatherAdapter = new WeatherAdapter(weatherDataList);
+                weatherAdapter.notifyDataSetChanged();
+                recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                recyclerView_weatherContainer.setAdapter(weatherAdapter);
+                recyclerView_weatherContainer.setHasFixedSize(true);
+            }
+        });
 //        // HTTPS Request handle
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://api.openweathermap.org/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-
-//        WeatherAPI weatherAPI = retrofit.create(WeatherAPI.class);
-//        Call<WeatherResponse> call = weatherAPI.getWeather(latitude, longitude, appid, units);
-
-//        call.enqueue(new Callback<WeatherResponse>() {
-//            @Override
-//            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-//                if (response.isSuccessful()) {
-//                    Log.d(TAG, "Status code: " +  response.code());
-//                    // handle the response and update the UI
-//                    WeatherResponse weatherResponse = response.body();
-//                    for (WeatherResponse.WeatherAllData weatherMainData : weatherResponse.getWeatherAllDataList()){
-//                        float temp = weatherMainData.getWeatherMainData().getTemp();
-//                        float feelsLike = weatherMainData.getWeatherMainData().getFeelsLike();
-//                        float tempMin = weatherMainData.getWeatherMainData().getTempMin();
-//                        float tempMax = weatherMainData.getWeatherMainData().getTempMax();
-//                        int humidity = weatherMainData.getWeatherMainData().getHumidity();
-//                        String descriptionLabel = weatherMainData.getWeatherDescription().getMain();
-//                        String descriptionDetail = weatherMainData.getWeatherDescription().getDescription();
-//                        String icon = weatherMainData.getWeatherDescription().getIcon();
-//                        int clouds = weatherMainData.getClouds().getAll();
-//                        float windSpeed = weatherMainData.getWind().getSpeed();
-//                        float rainProbability = weatherMainData.getPop();
-//                        String time = weatherMainData.getDt_txt();
-//                        WeatherData tempWeatherData = new WeatherData(temp, feelsLike, tempMin, tempMax, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
-//                        weatherDataList.add(tempWeatherData);
-//                    }
-//                    Log.d(TAG, "Get weatherDataList successful");
-//                } else {
-//                    Log.d(TAG, "Get response failed. Status code: " + response.code());
-//                    // handle the error
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<WeatherResponse> call, Throwable t) {
-//                // handle the failure
-//                Log.d(TAG, "Error calling API " + t.getMessage());
-//            }
-//        });
 
         // Inflate the layout for this fragment
         return view;
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    @Override
     public void onWeatherDataFetched(List<WeatherData> weatherDataList) {
-        weatherAdapter.setWeatherDataList(weatherDataList);
-        weatherAdapter.notifyDataSetChanged();
-        recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView_weatherContainer.setAdapter(weatherAdapter);
-        recyclerView_weatherContainer.setHasFixedSize(true);
+        Log.d(TAG, "onWeatherDataFetched: " + weatherDataList.toString());
+        weatherViewModel.setWeatherDataList(weatherDataList);
     }
 }
 
