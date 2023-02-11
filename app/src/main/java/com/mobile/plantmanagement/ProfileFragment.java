@@ -42,7 +42,6 @@ public class ProfileFragment extends Fragment implements WeatherCallback{
     private static final String ARG_PARAM2 = "param2";
     private final String TAG = "PROFILE";
     private TextView tv_currentDateTime;
-    private HorizontalScrollView scrollView_horizontalScrollView;
     private RecyclerView recyclerView_weatherContainer;
 
     private WeatherFetcher weatherFetcher;
@@ -95,7 +94,6 @@ public class ProfileFragment extends Fragment implements WeatherCallback{
         mainActivity.hideDisplayHomeUp();
 
         tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
-        scrollView_horizontalScrollView = view.findViewById(R.id.scrollView_horizontalScrollView);
         recyclerView_weatherContainer = view.findViewById(R.id.recyclerView_weatherContainer);
 
 

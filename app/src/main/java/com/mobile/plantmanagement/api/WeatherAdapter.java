@@ -2,6 +2,7 @@ package com.mobile.plantmanagement.api;
 
 import static com.mobile.plantmanagement.R.layout.weather_display_template;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     private List<WeatherData> weatherDataList;
     private static final int weather_display_template = R.layout.weather_display_template;
+    private final String TAG = "WEATHER_ADAPTER";
     public WeatherAdapter (List<WeatherData> weatherDataList){
         this.weatherDataList = weatherDataList;
     }
@@ -38,9 +40,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull WeatherViewHolder holder, int position) {
+        Log.d(TAG, "Position: " + position + ", weatherDataList size: " + String.valueOf(weatherDataList.size()));
         WeatherData weatherData = weatherDataList.get(position);
         Picasso.get()
-                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@2x.png")
+                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@4x.png")
                 .into(holder.getIcon());
         holder.getTime().setText(weatherData.getTime());
         holder.getTemperature().setText(Float.toString(weatherData.getTemp()));

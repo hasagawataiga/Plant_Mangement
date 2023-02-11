@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
@@ -18,18 +18,17 @@
             android:text="Current date and time"
             android:textSize="20sp"
             android:textStyle="bold" />
-
-        <HorizontalScrollView
-            android:id="@+id/scrollView_horizontalScrollView"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_weatherContainer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
+                android:layout_height="match_parent">
             </androidx.recyclerview.widget.RecyclerView>
-        </HorizontalScrollView>
+        </LinearLayout>
+
+
 
         <TextView
             android:id="@+id/tv_next7Days"
