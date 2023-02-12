@@ -27,7 +27,10 @@ Whether you're a small-scale farmer or managing a large operation, Farmer's Comp
 
 ### Libraries
 
-- Updating ...
+- Retrofit
+- Picasso
+- Updating...
+
 ## Frameworks
 
 - Android Support Library
@@ -38,19 +41,21 @@ Whether you're a small-scale farmer or managing a large operation, Farmer's Comp
 - Gradle
 
 ## Database
-
+    Using "non-SQL" platform
 - Firebase
     - Firestore Database
+    - Authentication
 
 ## Features
 
 - Real-time weather status via API
 - Calendar for saving and tracking activities
+- Adding notes
 - Darkmode/Lightmode
 - Chart to track activies in the past to find out the best solutions
-- ...
+- Updating...
 
 ## Authors
 
 Tuan Hoang
-Software Engineering (mostly using Java)
+Software Engineering
