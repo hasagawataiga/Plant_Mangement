@@ -41,15 +41,30 @@ dependencies {
     // CalendarView library
 //    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
 
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Also add the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+
+    implementation 'com.facebook.android:facebook-login:latest.release'
+
     // Picasso library
     implementation 'com.squareup.picasso:picasso:2.8'
 
     // Retrofit library
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+//
+//    // Import the BoM for the Firebase platform
+//    implementation platform('com.google.firebase:firebase-bom:31.2.0')
 
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
@@ -57,9 +72,6 @@ dependencies {
 
     // Avoid duplicate class lifecycle-viewmodel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-//    // CalendarView library
-//    implementation 'com.github.kizitonwose:CalendarView:2.2.0'
-//    implementation 'com.google.firebase:firebase-database:<latest-version>'
 
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'com.google.android.material:material:1.8.0'

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignInActivity">
+    <TextView
+        android:id="@+id/signIn_tv_activityName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="Sign In"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="45dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/signIn_tv_tag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/signIn_tv_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tag"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/signIn_linearLayout_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signIn_tv_activityName" />
+
+
+    <LinearLayout
+        android:id="@+id/signIn_linearLayout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signIn_tv_tag"
+        app:layout_constraintBottom_toTopOf="@id/signIn_progressBar">
+
+        <EditText
+            android:id="@+id/signIn_et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="#CEFFDC"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/signIn_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="#CEFFDC"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/signIn_tv_forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Forgot Password?"
+            android:layout_marginBottom="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/signIn_linearLayout_buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_Google_button"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone"
+                app:buttonSize="standard"/>
+
+            <Button
+                android:id="@+id/signIn_btn_google"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/gg_icon"
+                android:onClick="signInGoogle"
+                android:paddingStart="12dp"
+                android:text="Google"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/sign_in_Facebook_button"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:text="Facebook"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/signIn_btn_Facebook"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/fb_icon"
+                android:paddingStart="12dp"
+                android:text="Facebook"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_template1"
+            android:onClick="signIn"
+            android:text="Login"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/signIn_linearLayout_goToRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/signIn_tv_goToRegisterLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New here?"
+                android:textSize="14dp"
+                android:layout_marginEnd="15dp"/>
+
+            <TextView
+                android:id="@+id/signIn_tv_goToRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToRegister"
+                android:text="Register now"
+                android:textColor="@color/teal_700"
+                android:textColorHighlight="@color/teal_700"
+                android:textSize="15dp"
+                tools:ignore="TouchTargetSizeCheck"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/signIn_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="bottom"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signIn_linearLayout_container" />
+</androidx.constraintlayout.widget.ConstraintLayout>
