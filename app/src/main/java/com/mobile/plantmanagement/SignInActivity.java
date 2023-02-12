@@ -47,6 +47,18 @@ public class SignInActivity extends AppCompatActivity {
         btn_facebook = findViewById(R.id.signIn_btn_Facebook);
         btn_login = findViewById(R.id.btn_login);
         tv_goToRegister = findViewById(R.id.signIn_tv_goToRegister);
+        tv_forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToResetPassword(v);
+            }
+        });
+        tv_goToRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToRegister(v);
+            }
+        });
 
         // Email SignIn
         firebaseAuth = FirebaseAuth.getInstance();
@@ -82,13 +94,13 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    public void goToRegister (View view){
-        Intent registerIntent = new Intent(SignInActivity.this, UserRegister.class);
+    private void goToRegister (View view){
+        Intent registerIntent = new Intent(SignInActivity.this, SignUpActivity.class);
         startActivity(registerIntent);
     }
 
-    public void goToResetPasswordViaEmail (View view){
-        Intent intent = new Intent (SignInActivity.this, UserResetPasswordViaEmail.class);
+    private void goToResetPassword (View view){
+        Intent intent = new Intent (SignInActivity.this, ResetPasswordActivity.class);
         startActivity(intent);
     }
 }

@@ -1,14 +1,19 @@
 package com.mobile.plantmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 import com.mobile.plantmanagement.databinding.ActivityMainBinding;
@@ -18,9 +23,12 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
+    TextView tv_signIn;
+
     final String TAG = "MainActivity";
     ActivityMainBinding binding;
     FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +37,30 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
         fragmentsController();
 
+        // Sign In textview on Action bar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(R.layout.sign_in_textview);
+        tv_signIn = findViewById(R.id.main_tv_sign_in);
+
         changeFragment(new ProfileFragment());
         // Listen for changes in the back stack of fragments
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
-    // give me source code for example about retrieve the data from database of Cloud Firestore, stores those data into ViewModel as object and transfer it into view, and otherwise in MVVM using Java
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        MenuItem signInItem = menu.findItem(R.id.action_sign_in);
+//        signInItem.setActionView(R.layout.sign_in_textview);
+//        View view = signInItem.getActionView();
+//        tv_signIn = view.findViewById(R.id.main_tv_sign_in);
+        tv_signIn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+            startActivity(intent);
+        });
+        return true;
+    }
 
     private void fragmentsController(){
         // Always begin with Home fragment
