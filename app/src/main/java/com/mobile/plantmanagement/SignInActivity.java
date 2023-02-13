@@ -103,4 +103,5 @@ public class SignInActivity extends AppCompatActivity {
         Intent intent = new Intent (SignInActivity.this, ResetPasswordActivity.class);
         startActivity(intent);
     }
+
 }

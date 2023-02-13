@@ -10,10 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="45dp"
+        android:textSize="50dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/signIn_tv_tag"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         android:id="@+id/signIn_tv_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tag"
+        android:text="@string/sign_in_tag"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:background="#CEFFDC"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
             android:padding="10dp"/>
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:background="#CEFFDC"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:padding="10dp"/>
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="Forgot Password?"
+            android:text="@string/forgot_password"
             android:layout_marginBottom="20dp"/>
 
         <LinearLayout
@@ -98,7 +98,7 @@
                 android:drawableLeft="@drawable/gg_icon"
                 android:onClick="signInGoogle"
                 android:paddingStart="12dp"
-                android:text="Google"
+                android:text="@string/google"
                 android:textSize="12dp"
                 android:textStyle="bold"/>
 
@@ -106,7 +106,7 @@
                 android:id="@+id/sign_in_Facebook_button"
                 android:layout_width="150dp"
                 android:layout_height="100dp"
-                android:text="Facebook"
+                android:text="@string/facebook"
                 android:visibility="gone"/>
 
             <Button
@@ -116,7 +116,7 @@
                 android:background="@color/white"
                 android:drawableLeft="@drawable/fb_icon"
                 android:paddingStart="12dp"
-                android:text="Facebook"
+                android:text="@string/facebook"
                 android:textSize="12dp"
                 android:textStyle="bold"/>
 
@@ -130,7 +130,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/button_template1"
             android:onClick="signIn"
-            android:text="Login"
+            android:text="@string/login"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -144,7 +144,7 @@
                 android:id="@+id/signIn_tv_goToRegisterLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New here?"
+                android:text="@string/new_here"
                 android:textSize="14dp"
                 android:layout_marginEnd="15dp"/>
 
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToRegister"
-                android:text="Register now"
+                android:text="@string/register_now"
                 android:textColor="@color/teal_700"
                 android:textColorHighlight="@color/teal_700"
                 android:textSize="15dp"
