@@ -14,8 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mobile.plantmanagement.databinding.ActivityMainBinding;
 
 import java.util.Objects;
@@ -28,7 +35,12 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     final String TAG = "MainActivity";
     ActivityMainBinding binding;
     FragmentManager fragmentManager;
+    ActionBar actionBar;
 
+    GoogleSignInClient googleSignInClient;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +49,18 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
         fragmentsController();
 
+        // Auth instance
+        firebaseAuth = FirebaseAuth.getInstance();
         // Sign In textview on Action bar
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(R.layout.sign_in_textview);
-        tv_signIn = findViewById(R.id.main_tv_sign_in);
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        // Google SignIn
+        GoogleSignInOptions gso = new GoogleSignInOptions.
+                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                build();
+        googleSignInClient= GoogleSignIn.getClient(getApplicationContext(),gso);
 
         changeFragment(new ProfileFragment());
         // Listen for changes in the back stack of fragments
@@ -55,11 +74,41 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 //        signInItem.setActionView(R.layout.sign_in_textview);
 //        View view = signInItem.getActionView();
 //        tv_signIn = view.findViewById(R.id.main_tv_sign_in);
-        tv_signIn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
-            startActivity(intent);
-        });
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                updateActionBarUI(user);
+            }
+        };
+        firebaseAuth.addAuthStateListener(mAuthListener);
+
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            firebaseAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    private void updateActionBarUI(FirebaseUser user){
+        if(user == null) {
+            actionBar.setCustomView(R.layout.sign_in_textview);
+            tv_signIn = findViewById(R.id.main_tv_sign_in);
+            tv_signIn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                startActivity(intent);
+            });
+        } else {
+            actionBar.setCustomView(R.layout.user_info_action_bar);
+            TextView tv_sign_out = findViewById(R.id.main_tv_sign_out);
+            tv_sign_out.setOnClickListener(v -> {
+                signOut();
+            });
+        }
     }
 
     private void fragmentsController(){
@@ -91,6 +140,19 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         });
     }
 
+    private void signOut (){
+        firebaseAuth.signOut();
+//        logoutFromFacebook();
+        logoutFromGoogle();
+//        isLoggedIn = false;
+//        updateActionBarUI();
+    }
+    private void logoutFromGoogle(){
+        googleSignInClient.signOut().addOnCompleteListener(this, task -> Toast.makeText(getApplicationContext(), "Logout successfully", Toast.LENGTH_SHORT).show());
+    }
+    private void logoutFromFacebook(){
+        LoginManager.getInstance().logOut();
+    }
 
     protected void changeFragment(Fragment fragment){
         fragmentManager = getSupportFragmentManager();
