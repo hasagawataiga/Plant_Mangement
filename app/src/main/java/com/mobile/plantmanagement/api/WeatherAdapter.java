@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mobile.plantmanagement.R;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
 
 import java.util.List;
 

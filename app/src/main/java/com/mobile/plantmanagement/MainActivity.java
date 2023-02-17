@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mobile.plantmanagement.databinding.ActivityMainBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         // Sign In textview on Action bar
         actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
         firebaseUser = firebaseAuth.getCurrentUser();
 
         // Google SignIn
@@ -105,12 +107,38 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         } else {
             actionBar.setCustomView(R.layout.user_info_action_bar);
             TextView tv_sign_out = findViewById(R.id.main_tv_sign_out);
+            ImageView imageView_user_icon = findViewById(R.id.main_imageView_user_icon);
+            try{
+                Picasso.get()
+                        .load(getUserIcon(user))
+                        .into(imageView_user_icon);
+                Log.d(TAG, "Get user icon successfully.");
+            } catch (Exception e){
+                imageView_user_icon.setImageResource(R.drawable.ic_round_tag_faces_24);
+                Log.d(TAG, "Get user icon failed.");
+            }
+            TextView tv_displayName = findViewById(R.id.main_tv_display_name);
+            tv_displayName.setText(getUserDisplayName(user));
+            Log.d(TAG, "user's displayName: " + tv_displayName.getText().toString());
             tv_sign_out.setOnClickListener(v -> {
                 signOut();
             });
         }
     }
-
+    private String getUserDisplayName(FirebaseUser user) {
+        if (user != null) {
+            String displayName = user.getDisplayName();
+            return displayName;
+        }
+        return "Guest " + Constants.USER_INDEX++;
+    }
+    private String getUserIcon(FirebaseUser user) {
+        if (user != null) {
+            String photoUrl = user.getPhotoUrl().toString();
+            return photoUrl;
+        }
+        return null;
+    }
     private void fragmentsController(){
         // Always begin with Home fragment
         changeFragment(new HomeFragment());
@@ -142,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     private void signOut (){
         firebaseAuth.signOut();
-//        logoutFromFacebook();
+        logoutFromFacebook();
         logoutFromGoogle();
 //        isLoggedIn = false;
 //        updateActionBarUI();

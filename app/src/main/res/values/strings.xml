@@ -1,22 +1,11 @@
 <resources>
     <string name="app_name">Plant Management</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="facebook_app_id">1141995133132815</string>
+    <string name="fb_login_protocol_scheme">fb1141995133132815</string>
+    <string name="facebook_client_token">04b129ce90e96af9d4a0e49dcc2772e2</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_up_tag">Sign Up Tag</string>
     <string name="email">Email</string>
@@ -48,4 +37,20 @@
         <item>Pesticide</item>
         <item>Watering</item>
     </string-array>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
