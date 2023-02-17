@@ -54,7 +54,7 @@ public class SignInActivity extends AppCompatActivity {
     // Google sign in
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
-    private final int RC_SIGN_IN = 1603;
+    private final int RC_SIGN_IN = 1000;
     String emailInput;
     String passwordInput;
 
@@ -100,7 +100,7 @@ public class SignInActivity extends AppCompatActivity {
 
         // Google SignIn init
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(String.valueOf(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
 
@@ -160,6 +160,7 @@ public class SignInActivity extends AppCompatActivity {
 //                isLoggedIn = true;
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                Log.d(TAG, "Error getting result", e);
                 Toast.makeText(getApplicationContext(), "can not get result", Toast.LENGTH_SHORT).show();
             }
         }

@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "260375900054-iovl4q2k0qth4eeh29svj2q0m4b85j1c.apps.googleusercontent.com",
+          "client_id": "260375900054-da7o6hsvu5otqa3adfft6f0kbshktvni.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mobile.plantmanagement",
-            "certificate_hash": "b55714b319a30f31263565be98178933da2befa0"
+            "certificate_hash": "5c303f1bfc7a7b8b7a8d7b2ab44b4212ffd7c7f2"
           }
         },
         {
