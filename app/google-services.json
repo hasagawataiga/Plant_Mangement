@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "260375900054",
+    "firebase_url": "https://self-mangement-default-rtdb.firebaseio.com",
     "project_id": "self-mangement",
     "storage_bucket": "self-mangement.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "260375900054-c7l2lncerqthgqdisbi23vbrvsi8mka3.apps.googleusercontent.com",
+          "client_id": "260375900054-5qe7geljhceer8mi6ltmj1js4huqdvh8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "260375900054-c7l2lncerqthgqdisbi23vbrvsi8mka3.apps.googleusercontent.com",
+              "client_id": "260375900054-5qe7geljhceer8mi6ltmj1js4huqdvh8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

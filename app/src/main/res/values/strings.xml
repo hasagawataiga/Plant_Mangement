@@ -4,8 +4,7 @@
 
     <string name="facebook_app_id">1141995133132815</string>
     <string name="fb_login_protocol_scheme">fb1141995133132815</string>
-    <string name="facebook_client_token">04b129ce90e96af9d4a0e49dcc2772e2</string>
-
+    <string name="facebook_client_token">af666d97f3da71371b31d4ea47b1c236</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_up_tag">Sign Up Tag</string>
     <string name="email">Email</string>

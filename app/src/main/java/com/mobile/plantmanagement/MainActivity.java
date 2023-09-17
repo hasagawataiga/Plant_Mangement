@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
                 build();
         googleSignInClient= GoogleSignIn.getClient(getApplicationContext(),gso);
 
-        changeFragment(new ProfileFragment());
+//        changeFragment(new ProfileFragment());
         // Listen for changes in the back stack of fragments
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }

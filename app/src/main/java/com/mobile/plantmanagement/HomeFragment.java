@@ -213,6 +213,7 @@ public class HomeFragment extends Fragment {
         return notes;
     }
 
+    @NonNull
     private Map<String, Object> saveAllEvents(){
         Map <String, Object> events = new HashMap<String, Object>();
         for (int i = 0; i < home_linearLayout_componentsContainer.getChildCount(); i++){
@@ -225,6 +226,7 @@ public class HomeFragment extends Fragment {
                 String amount = et_amount.getText().toString();
                 String unit = spinner_unit.getSelectedItem().toString();
                 events.put(name, amount + "@" + unit);
+                Log.d(TAG, events.toString());
             }catch(Exception e){
                 Log.d(TAG, "Error saving events and notes", e);
             }
