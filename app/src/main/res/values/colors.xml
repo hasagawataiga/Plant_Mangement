@@ -9,4 +9,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#12B3B3B3</color>
     <color name="light_yellow">#FFF0AD</color>
+
+
+    <!-- App Colors -->
+    <color name="navBarColor">#00ADB5</color>
+    <color name="mainBGColor">#222831</color>
+    <color name="blockBGColor">#454B54</color>
+    <color name="textColor">#EEEEEE</color>
+    <color name="textHintColor">#80EEEEEE</color>   <!-- 50% -->
 </resources>

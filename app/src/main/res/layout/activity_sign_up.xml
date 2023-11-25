@@ -97,10 +97,11 @@
                 android:id="@+id/signUp_tv_returnSignIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="goToSignIn"
                 android:text="@string/return_to_sign_in"
                 android:textColor="@color/teal_700"
                 android:textSize="14sp"
-                android:onClick="goToSignIn"/>
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
     </LinearLayout>
 

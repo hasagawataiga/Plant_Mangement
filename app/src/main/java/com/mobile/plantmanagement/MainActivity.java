@@ -23,6 +23,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mobile.plantmanagement.Fragment.ChartFragment;
+import com.mobile.plantmanagement.Fragment.CalendarFragment;
+import com.mobile.plantmanagement.Fragment.WeatherFragment;
+import com.mobile.plantmanagement.Fragment.SettingsFragment;
 import com.mobile.plantmanagement.databinding.ActivityMainBinding;
 import com.squareup.picasso.Picasso;
 
@@ -54,8 +58,12 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         firebaseAuth = FirebaseAuth.getInstance();
         // Sign In textview on Action bar
         actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
+        if (actionBar != null) {
+            actionBar.setDisplayShowCustomEnabled(true);
+        }
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
         firebaseUser = firebaseAuth.getCurrentUser();
 
         // Google SignIn
@@ -76,12 +84,9 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 //        signInItem.setActionView(R.layout.sign_in_textview);
 //        View view = signInItem.getActionView();
 //        tv_signIn = view.findViewById(R.id.main_tv_sign_in);
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                updateActionBarUI(user);
-            }
+        mAuthListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            updateActionBarUI(user);
         };
         firebaseAuth.addAuthStateListener(mAuthListener);
 
@@ -120,49 +125,47 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             TextView tv_displayName = findViewById(R.id.main_tv_display_name);
             tv_displayName.setText(getUserDisplayName(user));
             Log.d(TAG, "user's displayName: " + tv_displayName.getText().toString());
-            tv_sign_out.setOnClickListener(v -> {
-                signOut();
-            });
+            tv_sign_out.setOnClickListener(v -> signOut());
         }
     }
     private String getUserDisplayName(FirebaseUser user) {
         if (user != null) {
-            String displayName = user.getDisplayName();
-            return displayName;
+            return user.getDisplayName();
         }
         return "Guest " + Constants.USER_INDEX++;
     }
     private String getUserIcon(FirebaseUser user) {
         if (user != null) {
-            String photoUrl = user.getPhotoUrl().toString();
-            return photoUrl;
+            return Objects.requireNonNull(user.getPhotoUrl()).toString();
         }
         return null;
     }
     private void fragmentsController(){
         // Always begin with Home fragment
-        changeFragment(new HomeFragment());
+//        changeFragment(new WeatherFragment());
+        changeFragment(new WeatherFragment());
         // Fragment navigation Controller
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){
-                case R.id.profile:
-                    Log.d(TAG, "Binding Click profile fragment");
-                    changeFragment(new ProfileFragment());
+                case R.id.calendar:
+                    Log.d(TAG, "Binding Click Calendar fragment");
+                    changeFragment(new CalendarFragment());
                     break;
-                case R.id.home:
-                    Log.d(TAG, "Binding Click home fragment");
-                    changeFragment(new HomeFragment());
+                case R.id.weather:
+                    Log.d(TAG, "Binding Click Weather fragment");
+                    changeFragment(new WeatherFragment());
                     break;
                 case R.id.chart:
-                    Log.d(TAG, "Binding Click chart fragment");
+                    Log.d(TAG, "Binding Click Chart fragment");
                     changeFragment(new ChartFragment());
                     break;
                 case R.id.settings:
-                    Log.d(TAG, "Binding Click settings fragment");
+                    Log.d(TAG, "Binding Click Settings fragment");
                     changeFragment(new SettingsFragment());
                     break;
                 default:
                     Log.d(TAG, "Binding not matched any fragment id");
+                    changeFragment(new CalendarFragment());
             }
             return true;
         });

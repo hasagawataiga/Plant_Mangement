@@ -99,15 +99,19 @@
                 android:onClick="signInGoogle"
                 android:paddingStart="12dp"
                 android:text="@string/google"
+                android:textColor="#757575"
                 android:textSize="12dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck" />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/sign_in_Facebook_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:padding="8dp"/>
+                android:minHeight="48dp"
+                android:padding="8dp"
+                tools:ignore="TouchTargetSizeCheck" />
 
 <!--            <Button-->
 <!--                android:id="@+id/signIn_btn_Facebook"-->
@@ -140,13 +144,15 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_marginTop="20dp">
+
             <TextView
                 android:id="@+id/signIn_tv_goToRegisterLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
                 android:text="@string/new_here"
                 android:textSize="14dp"
-                android:layout_marginEnd="15dp"/>
+                tools:ignore="TextSizeCheck" />
 
             <TextView
                 android:id="@+id/signIn_tv_goToRegister"
@@ -157,7 +163,7 @@
                 android:textColor="@color/teal_700"
                 android:textColorHighlight="@color/teal_700"
                 android:textSize="15dp"
-                tools:ignore="TouchTargetSizeCheck"/>
+                tools:ignore="TouchTargetSizeCheck,TextSizeCheck" />
         </LinearLayout>
 
 

@@ -16,15 +16,15 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WeatherFetcher {
-    private String url = "http://api.openweathermap.org/";
-    private double longitude = 21.01;
-    private double latitude = 52.23;
+    private String url = "https://api.openweathermap.org/";
+    public double longitude = 21.01;
+    public double latitude = 52.23;
     private String appid = "339d49519e5ba2bd213c20c5f73c1a29";
     private String units = "metric";
     public List<WeatherData> weatherDataList = new ArrayList<>();
     private String TAG = "WEATHER_FETCHER";
 
-    public void fetchWeatherData(WeatherCallback callback) {
+    public void  fetchWeatherData(WeatherCallback callback) {
         // Make API call here
         // HTTPS Request handle
         Retrofit retrofit = new Retrofit.Builder()
@@ -54,9 +54,14 @@ public class WeatherFetcher {
                         float windSpeed = weatherMainData.getWind().getSpeed();
                         float rainProbability = weatherMainData.getPop();
                         String time = weatherMainData.getDt_txt();
-                        WeatherData tempWeatherData = new WeatherData(temp, feelsLike, tempMin, tempMax, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
+                        int condition = weatherMainData.getWeatherDescription().get(0).getId();
+                        int pressure = weatherMainData.getWeatherMainData().getPressure();
+//                        WeatherData tempWeatherData = new WeatherData(temp, feelsLike, tempMin, tempMax, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
+                        WeatherData tempWeatherData = new WeatherData(condition, temp, feelsLike, tempMin, tempMax, pressure, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
+
+
                         weatherDataList.add(tempWeatherData);
-//                        Log.d(TAG, "weatherDataList" + weatherDataList.toString());
+                        Log.d(TAG, "weatherDataList" + weatherDataList.toString());
                     }
                     callback.onWeatherDataFetched(weatherDataList);
                     Log.d(TAG, "Get weatherDataList successful" + weatherDataList.toString());

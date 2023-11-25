@@ -1,10 +1,12 @@
 package com.mobile.plantmanagement.api;
 
+
 public class WeatherData {
     private float temp;
     private float feelsLike;
     private float tempMin;
     private float tempMax;
+    private int pressure;
     private int humidity;
     private String descriptionLabel;
     private String descriptionDetail;
@@ -13,12 +15,15 @@ public class WeatherData {
     private float windSpeed;
     private float rainProbability;
     private String time;
+    private int condition;
 
-    public WeatherData(float temp, float feelsLike, float tempMin, float tempMax, int humidity, String descriptionLabel, String descriptionDetail, String icon, int clouds, float windSpeed, float rainProbability, String time) {
+    public WeatherData(int condition, float temp, float feelsLike, float tempMin, float tempMax, int pressure, int humidity, String descriptionLabel, String descriptionDetail, String icon, int clouds, float windSpeed, float rainProbability, String time) {
+        this.condition = condition;
         this.temp = temp;
         this.feelsLike = feelsLike;
         this.tempMin = tempMin;
         this.tempMax = tempMax;
+        this.pressure = pressure;
         this.humidity = humidity;
         this.descriptionLabel = descriptionLabel;
         this.descriptionDetail = descriptionDetail;
@@ -28,6 +33,15 @@ public class WeatherData {
         this.rainProbability = rainProbability;
         this.time = time;
     }
+
+    public int getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(int pressure) {
+        this.pressure = pressure;
+    }
+
 
     public float getTemp() {
         return temp;
@@ -123,6 +137,14 @@ public class WeatherData {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public int getCondition() {
+        return condition;
+    }
+
+    public void setCondition(int condition) {
+        this.condition = condition;
     }
 
     @Override

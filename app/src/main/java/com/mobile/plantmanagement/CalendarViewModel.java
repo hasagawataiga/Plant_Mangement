@@ -93,6 +93,7 @@ public class CalendarViewModel extends AndroidViewModel {
                         } else {
                             selectedDateEvents.setValue(null);
                         }
+                        Log.d(TAG, "Retrieving Events Successful");
                     }
 
                     @Override

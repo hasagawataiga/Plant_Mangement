@@ -52,6 +52,10 @@ public class WeatherResponse {
         private int visibility;
         @SerializedName("pop")
         private float pop;
+        @SerializedName("rain")
+        private Rain rain;
+        @SerializedName("snow")
+        private Snow snow;
         @SerializedName("sys")
         private WeatherSys weatherSys;
         @SerializedName("dt_txt")
@@ -205,6 +209,20 @@ public class WeatherResponse {
             public float getGust() {
                 return gust;
             }
+        }
+
+        public class Rain {
+            @SerializedName("3h")
+            private float rainVolume;
+
+            public float getRainVolume() {return this.rainVolume;}
+        }
+
+        public class Snow {
+            @SerializedName("3h")
+            private float snowVolume;
+
+            public float getSnowVolume() {return this.snowVolume;}
         }
 
         public class WeatherSys {
