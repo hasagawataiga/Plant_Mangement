@@ -56,9 +56,12 @@ public class WeatherFetcher {
                         String time = weatherMainData.getDt_txt();
                         int condition = weatherMainData.getWeatherDescription().get(0).getId();
                         int pressure = weatherMainData.getWeatherMainData().getPressure();
-//                        WeatherData tempWeatherData = new WeatherData(temp, feelsLike, tempMin, tempMax, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
-                        WeatherData tempWeatherData = new WeatherData(condition, temp, feelsLike, tempMin, tempMax, pressure, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
-
+                        String cityName = weatherResponse.getWeatherCity().getName();
+                        long sunrise = weatherResponse.getWeatherCity().getSunrise();
+                        long sunset = weatherResponse.getWeatherCity().getSunset();
+                        long dt = weatherMainData.getDt();
+                        //                        WeatherData tempWeatherData = new WeatherData(temp, feelsLike, tempMin, tempMax, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
+                        WeatherData tempWeatherData = new WeatherData(cityName, sunrise, sunset, dt, condition, temp, feelsLike, tempMin, tempMax, pressure, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
 
                         weatherDataList.add(tempWeatherData);
                         Log.d(TAG, "weatherDataList" + weatherDataList.toString());

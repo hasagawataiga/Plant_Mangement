@@ -2,6 +2,7 @@ package com.mobile.plantmanagement.api;
 
 import static com.mobile.plantmanagement.R.layout.weather_activity_home;
 import static com.mobile.plantmanagement.R.layout.weather_display_template;
+import static com.mobile.plantmanagement.R.layout.weather_main_layout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -32,25 +33,22 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
 
     private Context context;
     private List<WeatherData> weatherDataList;
+    private WeatherData weatherData;
     private static final int weather_display_template = R.layout.weather_display_template;
     private static final int weather_activity_home = R.layout.weather_activity_home;
 
-    private String updated_at;
-    private int condition, pressure;
-    private float rainPop, clouds, min, max, humidity, windSpeed;
-    private long update_time;
-    private final long sunrise = 1661834187;
-    private final long sunset = 1661882248;
+    private String updated_at, description, icon;
+    private int pressure;
+    private double humidity, temperature, min_temperature, max_temperature, wind_speed;
 
     private final String TAG = "WEATHER_ADAPTER";
-    public WeatherAdapter (List<WeatherData> weatherDataList){
+    public WeatherAdapter (List<WeatherData> weatherDataList, Context context){
         this.weatherDataList = weatherDataList;
-    }
-
-    public WeatherAdapter(Context context) {
         this.context = context;
     }
-
+    public WeatherAdapter (Context context) {
+        this.context = context;
+    }
     public void setWeatherDataList (List<WeatherData> weatherDataList){
         this.weatherDataList = weatherDataList;
     }
@@ -59,57 +57,51 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     @Override
     public WeatherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 //        View view = LayoutInflater.from(parent.getContext()).inflate(weather_display_template, parent, false);
-        View view = LayoutInflater.from(parent.getContext()).inflate(weather_activity_home, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(weather_main_layout, parent, false);
         return new WeatherViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull WeatherViewHolder holder, int position) {
         Log.d(TAG, "Position: " + position + ", weatherDataList size: " + String.valueOf(weatherDataList.size()));
-        WeatherData weatherData = weatherDataList.get(position);
+        weatherData = weatherDataList.get(position);
         // Holder For old approach
+        icon = weatherData.getIcon();
         Picasso.get()
-                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@4x.png")
-                .into(holder.getIcon());
-        holder.getTime().setText(weatherData.getTime());
-        holder.getTemperature().setText(Float.toString(weatherData.getTemp()));
-        holder.getFeelLike().setText(Float.toString(weatherData.getFeelsLike()));
-        holder.getHumidity().setText(Integer.toString(weatherData.getHumidity()));
-        holder.getCloudPercentage().setText(Integer.toString(weatherData.getClouds()));
-        holder.getRainProbability().setText(Float.toString(weatherData.getRainProbability()));
-
+                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@" + icon + ".png")
+                .into(holder.getConditionIv());
 
         // Holder for new approach
-        update_time = Long.parseLong(weatherData.getTime());
-        updated_at = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date((update_time * 1000) + (position * 864_000_00L)));   // i=0
-        condition = weatherData.getCondition();
-        rainPop = weatherData.getRainProbability();
-        clouds = weatherData.getClouds();
-        min = weatherData.getTempMin();
-        max = weatherData.getTempMax();
+        String time = weatherData.getTime();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+        updated_at = dayFormat.format(time);
+
+        description = weatherData.getDescriptionLabel();
+        temperature = weatherData.getTemp() - 273.15;
+        min_temperature = weatherData.getTempMin() - 273.15;
+        max_temperature = weatherData.getTempMax() - 273.15;
         pressure = weatherData.getPressure();
-        windSpeed = weatherData.getWindSpeed();
+        wind_speed = weatherData.getWindSpeed();
         humidity = weatherData.getHumidity();
 
         updateUI(holder);
-        hideProgressBar(holder);
+//        hideProgressBar(holder);
     }
 
     @SuppressLint("SetTextI18n")
     private void updateUI(WeatherViewHolder holder) {
-        String day = UpdateUI.TranslateDay(updated_at, context);
-        holder.dTime.setText(day);
-        holder.temp_min.setText(min + "°C");
-        holder.temp_max.setText(max + "°C");
-        holder.pressure.setText(pressure + " mb");
-        holder.wind.setText(windSpeed + " km/h");
-        holder.humidity.setText(humidity + "%");
-        holder.icon.setImageResource(
-                context.getResources().getIdentifier(
-                        UpdateUI.getIconID(condition, update_time, sunrise, sunset),
-                        "drawable",
-                        context.getPackageName()
-                ));
+
+
+
+        holder.nameTv.setText(weatherData.getCityName());
+        holder.updatedAtTv.setText(updated_at);
+        holder.conditionDescTv.setText(description);
+        holder.tempTv.setText(temperature + "°C");
+        holder.minTempTv.setText(min_temperature + "°C");
+        holder.maxTempTv.setText(max_temperature + "°C");
+        holder.pressureTv.setText(pressure + " mb");
+        holder.windTv.setText(wind_speed + " km/h");
+        holder.humidityTv.setText(humidity + "%");
     }
 
     @Override
@@ -117,100 +109,120 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
         return weatherDataList.size();
     }
 
-    private void hideProgressBar(WeatherViewHolder holder) {
-        holder.progress.setVisibility(View.GONE);
-        holder.layout.setVisibility(View.VISIBLE);
-    }
+//    private void hideProgressBar(WeatherViewHolder holder) {
+//        holder.progress.setVisibility(View.GONE);
+//        holder.layout.setVisibility(View.VISIBLE);
+//    }
 }
 
+
 class WeatherViewHolder extends RecyclerView.ViewHolder {
-
-    private ImageView imageView_icon;
-    private TextView tv_time;
-    private TextView tv_temperature;
-    private TextView tv_feelLike;
-    private TextView tv_humidity;
-    private TextView tv_cloudPercentage;
-    private TextView tv_rainProbability;
-
-    SpinKitView progress;
-    RelativeLayout layout;
-    TextView dTime, temp_min, temp_max, pressure, wind, humidity;
-    ImageView icon;
+    TextView nameTv;
+    TextView updatedAtTv;
+    ImageView conditionIv;
+    TextView conditionDescTv;
+    TextView tempTv;
+    TextView minTempTv;
+    TextView maxTempTv;
+    TextView pressureTv;
+    TextView windTv;
+    TextView humidityTv;
+//    SpinKitView progress;
+//    RelativeLayout layout;
+//    TextView dTime, temp_min, temp_max, pressure, wind, humidity;
+//    ImageView icon;
 
     public WeatherViewHolder(@NonNull View itemView) {
         super(itemView);
-        imageView_icon = itemView.findViewById(R.id.imageView_icon);
-        tv_time = itemView.findViewById(R.id.tv_time);
-        tv_temperature = itemView.findViewById(R.id.tv_temperature);
-        tv_feelLike = itemView.findViewById(R.id.tv_feelLike);
-        tv_humidity = itemView.findViewById(R.id.tv_humidity);
-        tv_cloudPercentage = itemView.findViewById(R.id.tv_cloudPercentage);
-        tv_rainProbability = itemView.findViewById(R.id.tv_rainProbability);
-
-        progress = itemView.findViewById(R.id.day_progress_bar);
-        layout = itemView.findViewById(R.id.day_relative_layout);
-        dTime = itemView.findViewById(R.id.day_time);
-        temp_min = itemView.findViewById(R.id.day_min_temp);
-        temp_max = itemView.findViewById(R.id.day_max_temp);
-        pressure = itemView.findViewById(R.id.day_pressure);
-        wind = itemView.findViewById(R.id.day_wind);
-        humidity = itemView.findViewById(R.id.day_humidity);
-        icon = itemView.findViewById(R.id.day_icon);
-    }
-    public ImageView getIcon() {
-        return imageView_icon;
+        nameTv = itemView.findViewById(R.id.name_tv);
+        updatedAtTv = itemView.findViewById(R.id.updated_at_tv);
+        conditionIv = itemView.findViewById(R.id.condition_iv);
+        conditionDescTv = itemView.findViewById(R.id.conditionDesc_tv);
+        tempTv = itemView.findViewById(R.id.temp_tv);
+        minTempTv = itemView.findViewById(R.id.min_temp_tv);
+        maxTempTv = itemView.findViewById(R.id.max_temp_tv);
+        pressureTv = itemView.findViewById(R.id.pressure_tv);
+        windTv = itemView.findViewById(R.id.wind_tv);
+        humidityTv = itemView.findViewById(R.id.humidity_tv);
     }
 
-    public void setIcon(ImageView imageView_icon) {
-        this.imageView_icon = imageView_icon;
+    public TextView getNameTv() {
+        return nameTv;
     }
 
-    public TextView getTime() {
-        return tv_time;
+    public void setNameTv(TextView nameTv) {
+        this.nameTv = nameTv;
     }
 
-    public void setTime(TextView tv_time) {
-        this.tv_time = tv_time;
+    public TextView getUpdatedAtTv() {
+        return updatedAtTv;
     }
 
-    public TextView getTemperature() {
-        return tv_temperature;
+    public void setUpdatedAtTv(TextView updatedAtTv) {
+        this.updatedAtTv = updatedAtTv;
     }
 
-    public void setTemperature(TextView tv_temperature) {
-        this.tv_temperature = tv_temperature;
+    public ImageView getConditionIv() {
+        return conditionIv;
     }
 
-    public TextView getFeelLike() {
-        return tv_feelLike;
+    public void setConditionIv(ImageView conditionIv) {
+        this.conditionIv = conditionIv;
     }
 
-    public void setFeelLike(TextView tv_feelLike) {
-        this.tv_feelLike = tv_feelLike;
+    public TextView getConditionDescTv() {
+        return conditionDescTv;
     }
 
-    public TextView getHumidity() {
-        return tv_humidity;
+    public void setConditionDescTv(TextView conditionDescTv) {
+        this.conditionDescTv = conditionDescTv;
     }
 
-    public void setHumidity(TextView tv_humidity) {
-        this.tv_humidity = tv_humidity;
+    public TextView getTempTv() {
+        return tempTv;
     }
 
-    public TextView getCloudPercentage() {
-        return tv_cloudPercentage;
+    public void setTempTv(TextView tempTv) {
+        this.tempTv = tempTv;
     }
 
-    public void setCloudPercentage(TextView tv_cloudPercentage) {
-        this.tv_cloudPercentage = tv_cloudPercentage;
+    public TextView getMinTempTv() {
+        return minTempTv;
     }
 
-    public TextView getRainProbability() {
-        return tv_rainProbability;
+    public void setMinTempTv(TextView minTempTv) {
+        this.minTempTv = minTempTv;
     }
 
-    public void setRainProbability(TextView tv_rainProbability) {
-        this.tv_rainProbability = tv_rainProbability;
+    public TextView getMaxTempTv() {
+        return maxTempTv;
+    }
+
+    public void setMaxTempTv(TextView maxTempTv) {
+        this.maxTempTv = maxTempTv;
+    }
+
+    public TextView getPressureTv() {
+        return pressureTv;
+    }
+
+    public void setPressureTv(TextView pressureTv) {
+        this.pressureTv = pressureTv;
+    }
+
+    public TextView getWindTv() {
+        return windTv;
+    }
+
+    public void setWindTv(TextView windTv) {
+        this.windTv = windTv;
+    }
+
+    public TextView getHumidityTv() {
+        return humidityTv;
+    }
+
+    public void setHumidityTv(TextView humidityTv) {
+        this.humidityTv = humidityTv;
     }
 }

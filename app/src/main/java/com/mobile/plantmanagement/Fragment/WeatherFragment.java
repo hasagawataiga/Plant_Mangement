@@ -80,22 +80,18 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     private final String TAG = "PROFILE";
     private TextView tv_currentDateTime;
     private RecyclerView recyclerView_weatherContainer;
-
-    private WeatherFetcher weatherFetcher;
     private WeatherAdapter weatherAdapter;
+    private WeatherFetcher weatherFetcher;
     private WeatherViewModel weatherViewModel;
 
 
     private final int WEATHER_FORECAST_APP_UPDATE_REQ_CODE = 101;   // for app update
     private static final int PERMISSION_CODE = 1;                   // for user location permission
-    private String name, updated_at, description, temperature, min_temperature, max_temperature, pressure, wind_speed, humidity;
-    private int condition;
-    private long update_time, sunset, sunrise;
+    private String name, updated_at, description;
     private String city = "";
     private final int REQUEST_CODE_EXTRA_INPUT = 101;
     private WeatherActivityHomeBinding weatherActivityHomeBinding;
-    private View view;
-//    Context applicationContext = requireContext().getApplicationContext();
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -152,18 +148,20 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
 //        tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
         recyclerView_weatherContainer = view.findViewById(R.id.recyclerView_weatherContainer);
 
-
+        weatherAdapter = new WeatherAdapter(requireContext());
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         weatherFetcher = new WeatherFetcher();
         weatherFetcher.fetchWeatherData(this);
         weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), new Observer<List<WeatherData>>() {
             @Override
             public void onChanged(List<WeatherData> weatherDataList) {
-                weatherAdapter = new WeatherAdapter(weatherDataList);
-                weatherAdapter.notifyDataSetChanged();
-                recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                recyclerView_weatherContainer.setAdapter(weatherAdapter);
-                recyclerView_weatherContainer.setHasFixedSize(true);
+                weatherAdapter = new WeatherAdapter(weatherDataList, requireContext());
+//                weatherAdapter.setWeatherDataList(weatherDataList);
+//                weatherAdapter.notifyDataSetChanged();
+//                recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//                recyclerView_weatherContainer.setAdapter(weatherAdapter);
+//                recyclerView_weatherContainer.setHasFixedSize(true);
+                Log.d("API called", "Data changed");
             }
         });
 //        // HTTPS Request handle
@@ -218,56 +216,55 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
 
     @SuppressLint("DefaultLocale")
     private void getTodayWeatherInfo(String name) {
-        URL url = new URL();
-        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.getLink(), null, response -> {
-            try {
-                this.name = name;
-                update_time = response.getJSONObject("current").getLong("dt");
-                updated_at = new SimpleDateFormat("EEEE hh:mm a", Locale.ENGLISH).format(new Date(update_time * 1000));
-
-                condition = response.getJSONArray("daily").getJSONObject(0).getJSONArray("weather").getJSONObject(0).getInt("id");
-                sunrise = response.getJSONArray("daily").getJSONObject(0).getLong("sunrise");
-                sunset = response.getJSONArray("daily").getJSONObject(0).getLong("sunset");
-                description = response.getJSONObject("current").getJSONArray("weather").getJSONObject(0).getString("main");
-
-                temperature = String.valueOf(Math.round(response.getJSONObject("current").getDouble("temp") - 273.15));
-                min_temperature = String.format("%.0f", response.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").getDouble("min") - 273.15);
-                max_temperature = String.format("%.0f", response.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").getDouble("max") - 273.15);
-                pressure = response.getJSONArray("daily").getJSONObject(0).getString("pressure");
-                wind_speed = response.getJSONArray("daily").getJSONObject(0).getString("wind_speed");
-                humidity = response.getJSONArray("daily").getJSONObject(0).getString("humidity");
-
-                updateUI();
-                hideProgressBar();
-                setUpDaysRecyclerView();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, null);
-        requestQueue.add(jsonObjectRequest);
-        Log.i("json_req", "Day 0");
+//        URL url = new URL();
+//        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.getLink(), null, response -> {
+//            try {
+//                this.name = name;
+//                update_time = response.getJSONObject("current").getLong("dt");
+//                updated_at = new SimpleDateFormat("EEEE hh:mm a", Locale.ENGLISH).format(new Date(update_time * 1000));
+//
+//                condition = response.getJSONArray("daily").getJSONObject(0).getJSONArray("weather").getJSONObject(0).getInt("id");
+//                sunrise = response.getJSONArray("daily").getJSONObject(0).getLong("sunrise");
+//                sunset = response.getJSONArray("daily").getJSONObject(0).getLong("sunset");
+//                description = response.getJSONObject("current").getJSONArray("weather").getJSONObject(0).getString("main");
+//
+//                temperature = String.valueOf(Math.round(response.getJSONObject("current").getDouble("temp") - 273.15));
+//                min_temperature = String.format("%.0f", response.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").getDouble("min") - 273.15);
+//                max_temperature = String.format("%.0f", response.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").getDouble("max") - 273.15);
+//                pressure = response.getJSONArray("daily").getJSONObject(0).getString("pressure");
+//                wind_speed = response.getJSONArray("daily").getJSONObject(0).getString("wind_speed");
+//                humidity = response.getJSONArray("daily").getJSONObject(0).getString("humidity");
+//
+//                updateUI();
+//                hideProgressBar();
+//                setUpDaysRecyclerView();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }, null);
+//        requestQueue.add(jsonObjectRequest);
+//        Log.i("json_req", "Day 0");
     }
 
-    @SuppressLint("SetTextI18n")
-    private void updateUI() {
-        weatherActivityHomeBinding.layout.nameTv.setText(name);
-        updated_at = translate(updated_at);
-        weatherActivityHomeBinding.layout.updatedAtTv.setText(updated_at);
-        weatherActivityHomeBinding.layout.conditionIv.setImageResource(
-                getResources().getIdentifier(
-                        UpdateUI.getIconID(condition, update_time, sunrise, sunset),
-                        "drawable",
-                        requireActivity().getPackageName()
-                ));
-        weatherActivityHomeBinding.layout.conditionDescTv.setText(description);
-        weatherActivityHomeBinding.layout.tempTv.setText(temperature + "°C");
-        weatherActivityHomeBinding.layout.minTempTv.setText(min_temperature + "°C");
-        weatherActivityHomeBinding.layout.maxTempTv.setText(max_temperature + "°C");
-        weatherActivityHomeBinding.layout.pressureTv.setText(pressure + " mb");
-        weatherActivityHomeBinding.layout.windTv.setText(wind_speed + " km/h");
-        weatherActivityHomeBinding.layout.humidityTv.setText(humidity + "%");
-    }
+//    @SuppressLint("SetTextI18n")
+//    private void updateUI(WeatherData weatherData) {
+//        updated_at = weatherData.getTime();
+//        updated_at = translate(updated_at);
+//        sunrise = weatherData.getSunrise();
+//        sunset = weatherData.getSunset();
+//        condition = weatherData.getCondition();
+//        update_time = weatherData.getDt();
+//
+//        description = weatherData.getDescriptionLabel();
+//        temperature = weatherData.getTemp() - 273.15;
+//        min_temperature = weatherData.getTempMin() - 273.15;
+//        max_temperature = weatherData.getTempMax() - 273.15;
+//        pressure = weatherData.getPressure();
+//        wind_speed = weatherData.getWindSpeed();
+//        humidity = weatherData.getHumidity();
+//
+//    }
 
     private void checkUpdate() {
         AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(requireContext());

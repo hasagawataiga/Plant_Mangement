@@ -16,8 +16,16 @@ public class WeatherData {
     private float rainProbability;
     private String time;
     private int condition;
+    private String cityName;
+    private long sunrise;
+    private long sunset;
+    private long dt;
 
-    public WeatherData(int condition, float temp, float feelsLike, float tempMin, float tempMax, int pressure, int humidity, String descriptionLabel, String descriptionDetail, String icon, int clouds, float windSpeed, float rainProbability, String time) {
+    public WeatherData(String cityName, long sunrise, long sunset, long dt, int condition, float temp, float feelsLike, float tempMin, float tempMax, int pressure, int humidity, String descriptionLabel, String descriptionDetail, String icon, int clouds, float windSpeed, float rainProbability, String time) {
+        this.cityName = cityName;
+        this.sunrise = sunrise;
+        this.sunset = sunset;
+        this.dt = dt;
         this.condition = condition;
         this.temp = temp;
         this.feelsLike = feelsLike;
@@ -32,6 +40,38 @@ public class WeatherData {
         this.windSpeed = windSpeed;
         this.rainProbability = rainProbability;
         this.time = time;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public long getSunrise() {
+        return sunrise;
+    }
+
+    public void setSunrise(long sunrise) {
+        this.sunrise = sunrise;
+    }
+
+    public long getSunset() {
+        return sunset;
+    }
+
+    public long getDt() {
+        return dt;
+    }
+
+    public void setDt(long dt) {
+        this.dt = dt;
+    }
+
+    public void setSunset(long sunset) {
+        this.sunset = sunset;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public int getPressure() {
