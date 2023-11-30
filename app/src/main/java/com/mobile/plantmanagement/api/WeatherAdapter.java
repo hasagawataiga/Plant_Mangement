@@ -24,6 +24,7 @@ import com.mobile.plantmanagement.Weather.Update.UpdateUI;
 import com.squareup.picasso.Picasso;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,9 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
         this.weatherDataList = weatherDataList;
         this.context = context;
     }
+    public WeatherAdapter (WeatherData weatherData, Context context) {
+        this.weatherData = weatherData;
+    }
     public WeatherAdapter (Context context) {
         this.context = context;
     }
@@ -62,9 +66,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     }
 
     @Override
+    public int getItemCount() {
+        return weatherData != null ? 1 : 0;
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull WeatherViewHolder holder, int position) {
-        Log.d(TAG, "Position: " + position + ", weatherDataList size: " + String.valueOf(weatherDataList.size()));
-        weatherData = weatherDataList.get(position);
+//        Log.d(TAG, "Position: " + position + ", weatherDataList size: " + String.valueOf(weatherDataList.size()));
+//        weatherData = weatherDataList.get(0);
         // Holder For old approach
         icon = weatherData.getIcon();
         Picasso.get()
@@ -72,27 +81,42 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
                 .into(holder.getConditionIv());
 
         // Holder for new approach
-        String time = weatherData.getTime();
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-        updated_at = dayFormat.format(time);
+        String timeString = weatherData.getTime();
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        Date date;
+        try {
+            date = inputFormat.parse(timeString);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the parsing exception appropriately
+            return;
+        }
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+        updated_at = dayFormat.format(date);
 
         description = weatherData.getDescriptionLabel();
-        temperature = weatherData.getTemp() - 273.15;
-        min_temperature = weatherData.getTempMin() - 273.15;
-        max_temperature = weatherData.getTempMax() - 273.15;
+        temperature = Math.round(weatherData.getTemp());
+        min_temperature = Math.round(weatherData.getTempMin());
+        max_temperature = Math.round(weatherData.getTempMax());
         pressure = weatherData.getPressure();
-        wind_speed = weatherData.getWindSpeed();
+        wind_speed = Math.round(weatherData.getWindSpeed());
         humidity = weatherData.getHumidity();
-
+        Log.i(TAG, "Begin fetching " + "update_at: " +
+                updated_at + ", description: " +
+                description + ", temperature: " +
+                temperature + ", min: " +
+                min_temperature + ", max: " +
+                max_temperature + ", pressure: " +
+                pressure + ", wind speed: " +
+                wind_speed + ", humidity: " +
+                humidity
+        );
         updateUI(holder);
+        Log.i(TAG, "Update UI main weather");
 //        hideProgressBar(holder);
     }
 
     @SuppressLint("SetTextI18n")
     private void updateUI(WeatherViewHolder holder) {
-
-
-
         holder.nameTv.setText(weatherData.getCityName());
         holder.updatedAtTv.setText(updated_at);
         holder.conditionDescTv.setText(description);
@@ -103,12 +127,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
         holder.windTv.setText(wind_speed + " km/h");
         holder.humidityTv.setText(humidity + "%");
     }
-
-    @Override
-    public int getItemCount() {
-        return weatherDataList.size();
-    }
-
 //    private void hideProgressBar(WeatherViewHolder holder) {
 //        holder.progress.setVisibility(View.GONE);
 //        holder.layout.setVisibility(View.VISIBLE);

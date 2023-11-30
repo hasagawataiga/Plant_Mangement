@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -58,9 +59,12 @@ import com.mobile.plantmanagement.WeatherViewModel;
 import com.mobile.plantmanagement.api.*;
 import com.mobile.plantmanagement.databinding.FragmentHomeBinding;
 import com.mobile.plantmanagement.databinding.WeatherActivityHomeBinding;
+import com.mobile.plantmanagement.databinding.WeatherMainLayoutBinding;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -80,14 +84,30 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     private final String TAG = "PROFILE";
     private TextView tv_currentDateTime;
     private RecyclerView recyclerView_weatherContainer;
+    private RecyclerView main_container;
+    private RecyclerView dayRv;
+    private List<WeatherData> weatherDataList;
     private WeatherAdapter weatherAdapter;
     private WeatherFetcher weatherFetcher;
     private WeatherViewModel weatherViewModel;
 
 
+    private TextView nameTv;
+    private TextView updateAtTv;
+    private ImageView conditionIv;
+    private TextView conditionDescTv;
+    private TextView tempTv;
+    private TextView minTempTv;
+    private TextView maxTempTv;
+    private TextView pressureTv;
+    private TextView windTv;
+    private TextView humidityTv;
+
     private final int WEATHER_FORECAST_APP_UPDATE_REQ_CODE = 101;   // for app update
     private static final int PERMISSION_CODE = 1;                   // for user location permission
-    private String name, updated_at, description;
+    private String name, updated_at, description, icon;
+    private int pressure;
+    private double humidity, temperature, min_temperature, max_temperature, wind_speed;
     private String city = "";
     private final int REQUEST_CODE_EXTRA_INPUT = 101;
     private WeatherActivityHomeBinding weatherActivityHomeBinding;
@@ -141,26 +161,35 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherActivityHomeBinding = WeatherActivityHomeBinding.inflate(inflater, container, false);
         View view = weatherActivityHomeBinding.getRoot();
 
+//        bindingView(view);
+
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
 
 //        tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
-        recyclerView_weatherContainer = view.findViewById(R.id.recyclerView_weatherContainer);
-
-        weatherAdapter = new WeatherAdapter(requireContext());
+        recyclerView_weatherContainer = view.findViewById(R.id.day_rv);
+//        dayRv = view.findViewById(R.id.day_rv);
+//        weatherAdapter = new WeatherAdapter(requireContext());
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         weatherFetcher = new WeatherFetcher();
         weatherFetcher.fetchWeatherData(this);
         weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), new Observer<List<WeatherData>>() {
             @Override
-            public void onChanged(List<WeatherData> weatherDataList) {
-                weatherAdapter = new WeatherAdapter(weatherDataList, requireContext());
+            public void onChanged(List<WeatherData> list) {
+                weatherDataList = list;
+                weatherAdapter = new WeatherAdapter(weatherDataList.get(0), getContext());
 //                weatherAdapter.setWeatherDataList(weatherDataList);
 //                weatherAdapter.notifyDataSetChanged();
 //                recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 //                recyclerView_weatherContainer.setAdapter(weatherAdapter);
+                updateUI(list.get(0));
 //                recyclerView_weatherContainer.setHasFixedSize(true);
+                DaysAdapter daysAdapter = new DaysAdapter(list, getContext());
+                weatherActivityHomeBinding.dayRv.setLayoutManager(
+                        new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                );
+                weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
                 Log.d("API called", "Data changed");
             }
         });
@@ -168,10 +197,20 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
 
         // Inflate the layout for this fragment
 
-
-
-
         return view;
+    }
+
+    public void bindingView(View view) {
+        nameTv = view.findViewById(R.id.name_tv);
+        updateAtTv = view.findViewById(R.id.updated_at_tv);
+        conditionIv = view.findViewById(R.id.condition_iv);
+        conditionDescTv = view.findViewById(R.id.conditionDesc_tv);
+        tempTv = view.findViewById(R.id.temp_tv);
+        minTempTv = view.findViewById(R.id.min_temp_tv);
+        maxTempTv = view.findViewById(R.id.max_temp_tv);
+        pressureTv = view.findViewById(R.id.pressure_tv);
+        windTv = view.findViewById(R.id.wind_tv);
+        humidityTv = view.findViewById(R.id.humidity_tv);
     }
 
     @Override
@@ -247,24 +286,44 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
 //        Log.i("json_req", "Day 0");
     }
 
-//    @SuppressLint("SetTextI18n")
-//    private void updateUI(WeatherData weatherData) {
-//        updated_at = weatherData.getTime();
-//        updated_at = translate(updated_at);
-//        sunrise = weatherData.getSunrise();
-//        sunset = weatherData.getSunset();
-//        condition = weatherData.getCondition();
-//        update_time = weatherData.getDt();
-//
-//        description = weatherData.getDescriptionLabel();
-//        temperature = weatherData.getTemp() - 273.15;
-//        min_temperature = weatherData.getTempMin() - 273.15;
-//        max_temperature = weatherData.getTempMax() - 273.15;
-//        pressure = weatherData.getPressure();
-//        wind_speed = weatherData.getWindSpeed();
-//        humidity = weatherData.getHumidity();
-//
-//    }
+    @SuppressLint("SetTextI18n")
+    private void updateUI(WeatherData weatherData) {
+        // Holder For old approach
+        String icon = weatherData.getIcon();
+        Picasso.get()
+                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@" + icon + ".png")
+                .into(weatherActivityHomeBinding.layout.conditionIv);
+
+        // Holder for new approach
+        String timeString = weatherData.getTime();
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        Date date;
+        try {
+            date = inputFormat.parse(timeString);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the parsing exception appropriately
+            return;
+        }
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+        updated_at = dayFormat.format(date);
+
+        description = weatherData.getDescriptionLabel();
+        temperature = Math.round(weatherData.getTemp());
+        min_temperature = Math.round(weatherData.getTempMin());
+        max_temperature = Math.round(weatherData.getTempMax());
+        pressure = weatherData.getPressure();
+        wind_speed = Math.round(weatherData.getWindSpeed());
+        humidity = weatherData.getHumidity();
+        weatherActivityHomeBinding.layout.nameTv.setText(weatherData.getCityName());
+        weatherActivityHomeBinding.layout.updatedAtTv.setText(updated_at);
+        weatherActivityHomeBinding.layout.conditionDescTv.setText(description);
+        weatherActivityHomeBinding.layout.tempTv.setText(temperature + "°C");
+        weatherActivityHomeBinding.layout.minTempTv.setText(min_temperature + "°C");
+        weatherActivityHomeBinding.layout.maxTempTv.setText(max_temperature + "°C");
+        weatherActivityHomeBinding.layout.pressureTv.setText(pressure + " mb");
+        weatherActivityHomeBinding.layout.windTv.setText(wind_speed + " km/h");
+        weatherActivityHomeBinding.layout.humidityTv.setText(humidity + "%");
+    }
 
     private void checkUpdate() {
         AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(requireContext());
@@ -282,18 +341,18 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     }
 
     private void getDataUsingNetwork() {
-        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(requireActivity());
-        //check permission
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
-        } else {
-            client.getLastLocation().addOnSuccessListener(location -> {
-                setLongitudeLatitude(location);
-                city = getCityNameUsingNetwork(requireContext(), location);
-                getTodayWeatherInfo(city);
-            });
-        }
+//        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(requireActivity());
+//        //check permission
+//        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+//        } else {
+//            client.getLastLocation().addOnSuccessListener(location -> {
+//                setLongitudeLatitude(location);
+//                city = getCityNameUsingNetwork(requireContext(), location);
+//                getTodayWeatherInfo(city);
+//            });
+//        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

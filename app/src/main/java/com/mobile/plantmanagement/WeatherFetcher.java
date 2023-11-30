@@ -24,7 +24,7 @@ public class WeatherFetcher {
     public List<WeatherData> weatherDataList = new ArrayList<>();
     private String TAG = "WEATHER_FETCHER";
 
-    public void  fetchWeatherData(WeatherCallback callback) {
+    public void fetchWeatherData(WeatherCallback callback) {
         // Make API call here
         // HTTPS Request handle
         Retrofit retrofit = new Retrofit.Builder()
@@ -64,7 +64,6 @@ public class WeatherFetcher {
                         WeatherData tempWeatherData = new WeatherData(cityName, sunrise, sunset, dt, condition, temp, feelsLike, tempMin, tempMax, pressure, humidity, descriptionLabel, descriptionDetail, icon, clouds, windSpeed, rainProbability, time);
 
                         weatherDataList.add(tempWeatherData);
-                        Log.d(TAG, "weatherDataList" + weatherDataList.toString());
                     }
                     callback.onWeatherDataFetched(weatherDataList);
                     Log.d(TAG, "Get weatherDataList successful" + weatherDataList.toString());
@@ -81,6 +80,6 @@ public class WeatherFetcher {
             }
         });
         // After getting the result from the API, pass it to the callback function
-        Log.d(TAG, weatherDataList.toString());
+//        Log.d(TAG, weatherDataList.toString());
     }
 }
