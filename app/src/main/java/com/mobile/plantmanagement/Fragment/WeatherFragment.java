@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -23,8 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,15 +38,12 @@ import com.mobile.plantmanagement.R;
 import com.mobile.plantmanagement.Weather.Adapter.DaysAdapter;
 import com.mobile.plantmanagement.Weather.Location.LocationCord;
 import com.mobile.plantmanagement.Weather.Toast.Toaster;
-import com.mobile.plantmanagement.Weather.Update.UpdateUI;
 import com.mobile.plantmanagement.Weather.Url.URL;
 import com.mobile.plantmanagement.WeatherCallback;
 import com.mobile.plantmanagement.WeatherFetcher;
 import com.mobile.plantmanagement.WeatherViewModel;
 import com.mobile.plantmanagement.api.*;
-import com.mobile.plantmanagement.databinding.FragmentHomeBinding;
 import com.mobile.plantmanagement.databinding.WeatherActivityHomeBinding;
-import com.mobile.plantmanagement.databinding.WeatherMainLayoutBinding;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -59,10 +53,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,30 +66,13 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final String TAG = "WEATHER";
-    private TextView tv_currentDateTime;
-    private RecyclerView recyclerView_weatherContainer;
-    private RecyclerView main_container;
-    private RecyclerView dayRv;
     private List<WeatherData> weatherDataList;
-    private WeatherAdapter weatherAdapter;
     private WeatherFetcher weatherFetcher;
     private WeatherViewModel weatherViewModel;
 
-
-    private TextView nameTv;
-    private TextView updateAtTv;
-    private ImageView conditionIv;
-    private TextView conditionDescTv;
-    private TextView tempTv;
-    private TextView minTempTv;
-    private TextView maxTempTv;
-    private TextView pressureTv;
-    private TextView windTv;
-    private TextView humidityTv;
-
     private final int WEATHER_FORECAST_APP_UPDATE_REQ_CODE = 101;   // for app update
     private static final int PERMISSION_CODE = 1;                   // for user location permission
-    private String name, updated_at, description, icon;
+    private String name, updated_at, description;
     private int pressure;
     private double humidity, temperature, min_temperature, max_temperature, wind_speed;
     private String city = "";
@@ -140,68 +113,33 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-//
-//        weatherActivityHomeBinding = WeatherActivityHomeBinding.inflate(getLayoutInflater());
-//        View view = weatherActivityHomeBinding.getRoot();
-//        setContentView(view);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        view = inflater.inflate(R.layout.weather_activity_home, container, false);
         weatherActivityHomeBinding = WeatherActivityHomeBinding.inflate(inflater, container, false);
         View view = weatherActivityHomeBinding.getRoot();
-
-//        bindingView(view);
 
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
 
-//        tv_currentDateTime = view.findViewById(R.id.tv_currentDateTime);
-        recyclerView_weatherContainer = view.findViewById(R.id.day_rv);
-//        dayRv = view.findViewById(R.id.day_rv);
-//        weatherAdapter = new WeatherAdapter(requireContext());
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         weatherFetcher = new WeatherFetcher();
         weatherFetcher.fetchWeatherData(this);
         weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), list -> {
             weatherDataList = list;
-            weatherAdapter = new WeatherAdapter(weatherDataList.get(0), getContext());
-//                weatherAdapter.setWeatherDataList(weatherDataList);
-//                weatherAdapter.notifyDataSetChanged();
-//                recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-//                recyclerView_weatherContainer.setAdapter(weatherAdapter);
             updateUI(weatherDataList.get(0));
-//                recyclerView_weatherContainer.setHasFixedSize(true);
-            DaysAdapter daysAdapter = new DaysAdapter(list, getContext());
-            weatherActivityHomeBinding.dayRv.setLayoutManager(
-                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            );
-            weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
+            setUpDaysRecyclerView(list);
+//            DaysAdapter daysAdapter = new DaysAdapter(list, getContext());
+//            weatherActivityHomeBinding.dayRv.setLayoutManager(
+//                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//            );
+//            weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
             Log.d(TAG, "Data changed: " + list.get(0).getCityName());
         });
-//        // HTTPS Request handle
-
-        // Inflate the layout for this fragment
-
         return view;
-    }
-
-    public void bindingView(View view) {
-        nameTv = view.findViewById(R.id.name_tv);
-        updateAtTv = view.findViewById(R.id.updated_at_tv);
-        conditionIv = view.findViewById(R.id.condition_iv);
-        conditionDescTv = view.findViewById(R.id.conditionDesc_tv);
-        tempTv = view.findViewById(R.id.temp_tv);
-        minTempTv = view.findViewById(R.id.min_temp_tv);
-        maxTempTv = view.findViewById(R.id.max_temp_tv);
-        pressureTv = view.findViewById(R.id.pressure_tv);
-        windTv = view.findViewById(R.id.wind_tv);
-        humidityTv = view.findViewById(R.id.humidity_tv);
     }
 
     @Override
@@ -236,54 +174,22 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         }
     }
 
-    private void setUpDaysRecyclerView() {
-        DaysAdapter daysAdapter = new DaysAdapter(requireContext());
+    private void setUpDaysRecyclerView(List<WeatherData> list) {
+        DaysAdapter daysAdapter = new DaysAdapter(list, requireContext());
         weatherActivityHomeBinding.dayRv.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         );
         weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
     }
 
-    @SuppressLint("DefaultLocale")
-    private void getTodayWeatherInfo(String name) {
-//        URL url = new URL();
-//        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.getLink(), null, response -> {
-//            try {
-//                this.name = name;
-//                update_time = response.getJSONObject("current").getLong("dt");
-//                updated_at = new SimpleDateFormat("EEEE hh:mm a", Locale.ENGLISH).format(new Date(update_time * 1000));
-//
-//                condition = response.getJSONArray("daily").getJSONObject(0).getJSONArray("weather").getJSONObject(0).getInt("id");
-//                sunrise = response.getJSONArray("daily").getJSONObject(0).getLong("sunrise");
-//                sunset = response.getJSONArray("daily").getJSONObject(0).getLong("sunset");
-//                description = response.getJSONObject("current").getJSONArray("weather").getJSONObject(0).getString("main");
-//
-//                temperature = String.valueOf(Math.round(response.getJSONObject("current").getDouble("temp") - 273.15));
-//                min_temperature = String.format("%.0f", response.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").getDouble("min") - 273.15);
-//                max_temperature = String.format("%.0f", response.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").getDouble("max") - 273.15);
-//                pressure = response.getJSONArray("daily").getJSONObject(0).getString("pressure");
-//                wind_speed = response.getJSONArray("daily").getJSONObject(0).getString("wind_speed");
-//                humidity = response.getJSONArray("daily").getJSONObject(0).getString("humidity");
-//
-//                updateUI();
-//                hideProgressBar();
-//                setUpDaysRecyclerView();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }, null);
-//        requestQueue.add(jsonObjectRequest);
-//        Log.i("json_req", "Day 0");
-    }
-
     @SuppressLint("SetTextI18n")
     private void updateUI(WeatherData weatherData) {
         name = weatherData.getCityName();
         // Holder For old approach
-        String icon = weatherData.getIcon();
         Picasso.get()
-                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@" + icon + ".png")
+                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + ".png")
+                .fit()
+                .centerCrop()
                 .into(weatherActivityHomeBinding.layout.conditionIv);
 
         // Holder for new approach
@@ -411,12 +317,6 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherActivityHomeBinding.mainRefreshLayout.setColorSchemeColors(
                 getResources().getColor(R.color.navBarColor)
         );
-    }
-
-    private String translate(String dayToTranslate) {
-        String[] dayToTranslateSplit = dayToTranslate.split(" ");
-        dayToTranslateSplit[0] = UpdateUI.TranslateDay(dayToTranslateSplit[0].trim(), requireContext());
-        return dayToTranslateSplit[0].concat(" " + dayToTranslateSplit[1]);
     }
 
     private void hideProgressBar() {

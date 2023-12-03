@@ -73,11 +73,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     public void onBindViewHolder(@NonNull WeatherViewHolder holder, int position) {
 //        Log.d(TAG, "Position: " + position + ", weatherDataList size: " + String.valueOf(weatherDataList.size()));
 //        weatherData = weatherDataList.get(0);
-        // Holder For old approach
-        icon = weatherData.getIcon();
-        Picasso.get()
-                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + "@" + icon + ".png")
-                .into(holder.getConditionIv());
 
         // Holder for new approach
         String timeString = weatherData.getTime();
@@ -111,11 +106,16 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
         );
         updateUI(holder);
         Log.i(TAG, "Update UI main weather: " + weatherData.getCityName());
-//        hideProgressBar(holder);
     }
 
     @SuppressLint("SetTextI18n")
     private void updateUI(WeatherViewHolder holder) {
+        // Holder For old approach
+        Picasso.get()
+                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + ".png")
+                .fit()
+                .centerCrop()
+                .into(holder.getConditionIv());
         holder.nameTv.setText(weatherData.getCityName());
         holder.updatedAtTv.setText(updated_at);
         holder.conditionDescTv.setText(description);
