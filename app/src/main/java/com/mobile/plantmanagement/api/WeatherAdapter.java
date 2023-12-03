@@ -60,7 +60,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
     @NonNull
     @Override
     public WeatherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext()).inflate(weather_display_template, parent, false);
         View view = LayoutInflater.from(parent.getContext()).inflate(weather_main_layout, parent, false);
         return new WeatherViewHolder(view);
     }
@@ -111,7 +110,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
                 humidity
         );
         updateUI(holder);
-        Log.i(TAG, "Update UI main weather");
+        Log.i(TAG, "Update UI main weather: " + weatherData.getCityName());
 //        hideProgressBar(holder);
     }
 
@@ -126,11 +125,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherViewHolder> {
         holder.pressureTv.setText(pressure + " mb");
         holder.windTv.setText(wind_speed + " km/h");
         holder.humidityTv.setText(humidity + "%");
+        hideProgressBar(holder);
     }
-//    private void hideProgressBar(WeatherViewHolder holder) {
-//        holder.progress.setVisibility(View.GONE);
-//        holder.layout.setVisibility(View.VISIBLE);
-//    }
+    private void hideProgressBar(WeatherViewHolder holder) {
+        holder.progress.setVisibility(View.GONE);
+        holder.layout.setVisibility(View.VISIBLE);
+    }
 }
 
 
@@ -145,8 +145,8 @@ class WeatherViewHolder extends RecyclerView.ViewHolder {
     TextView pressureTv;
     TextView windTv;
     TextView humidityTv;
-//    SpinKitView progress;
-//    RelativeLayout layout;
+    SpinKitView progress;
+    RelativeLayout layout;
 //    TextView dTime, temp_min, temp_max, pressure, wind, humidity;
 //    ImageView icon;
 
@@ -162,6 +162,8 @@ class WeatherViewHolder extends RecyclerView.ViewHolder {
         pressureTv = itemView.findViewById(R.id.pressure_tv);
         windTv = itemView.findViewById(R.id.wind_tv);
         humidityTv = itemView.findViewById(R.id.humidity_tv);
+        progress = itemView.findViewById(R.id.progress);
+        layout = itemView.findViewById(R.id.layout);
     }
 
     public TextView getNameTv() {

@@ -1,28 +1,20 @@
 package com.mobile.plantmanagement.Fragment;
 
-import static com.mobile.plantmanagement.Weather.Location.CityFinder.getCityNameUsingNetwork;
-import static com.mobile.plantmanagement.Weather.Location.CityFinder.setLongitudeLatitude;
 import static com.mobile.plantmanagement.Weather.Network.InternetConnectivity.isInternetConnected;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -38,8 +30,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -70,6 +60,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link WeatherFragment#newInstance} factory method to
@@ -81,7 +75,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private final String TAG = "PROFILE";
+    private final String TAG = "WEATHER";
     private TextView tv_currentDateTime;
     private RecyclerView recyclerView_weatherContainer;
     private RecyclerView main_container;
@@ -174,24 +168,21 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         weatherFetcher = new WeatherFetcher();
         weatherFetcher.fetchWeatherData(this);
-        weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), new Observer<List<WeatherData>>() {
-            @Override
-            public void onChanged(List<WeatherData> list) {
-                weatherDataList = list;
-                weatherAdapter = new WeatherAdapter(weatherDataList.get(0), getContext());
+        weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), list -> {
+            weatherDataList = list;
+            weatherAdapter = new WeatherAdapter(weatherDataList.get(0), getContext());
 //                weatherAdapter.setWeatherDataList(weatherDataList);
 //                weatherAdapter.notifyDataSetChanged();
 //                recyclerView_weatherContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 //                recyclerView_weatherContainer.setAdapter(weatherAdapter);
-                updateUI(list.get(0));
+            updateUI(weatherDataList.get(0));
 //                recyclerView_weatherContainer.setHasFixedSize(true);
-                DaysAdapter daysAdapter = new DaysAdapter(list, getContext());
-                weatherActivityHomeBinding.dayRv.setLayoutManager(
-                        new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                );
-                weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
-                Log.d("API called", "Data changed");
-            }
+            DaysAdapter daysAdapter = new DaysAdapter(list, getContext());
+            weatherActivityHomeBinding.dayRv.setLayoutManager(
+                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            );
+            weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
+            Log.d(TAG, "Data changed: " + list.get(0).getCityName());
         });
 //        // HTTPS Request handle
 
@@ -221,7 +212,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         setNavigationBarColor();
 
         //check for new app update
-        checkUpdate();
+//        checkUpdate();
 
         // set refresh color schemes
         setRefreshLayoutColor();
@@ -288,6 +279,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
 
     @SuppressLint("SetTextI18n")
     private void updateUI(WeatherData weatherData) {
+        name = weatherData.getCityName();
         // Holder For old approach
         String icon = weatherData.getIcon();
         Picasso.get()
@@ -314,7 +306,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         pressure = weatherData.getPressure();
         wind_speed = Math.round(weatherData.getWindSpeed());
         humidity = weatherData.getHumidity();
-        weatherActivityHomeBinding.layout.nameTv.setText(weatherData.getCityName());
+        weatherActivityHomeBinding.layout.nameTv.setText(name);
         weatherActivityHomeBinding.layout.updatedAtTv.setText(updated_at);
         weatherActivityHomeBinding.layout.conditionDescTv.setText(description);
         weatherActivityHomeBinding.layout.tempTv.setText(temperature + "°C");
@@ -323,6 +315,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherActivityHomeBinding.layout.pressureTv.setText(pressure + " mb");
         weatherActivityHomeBinding.layout.windTv.setText(wind_speed + " km/h");
         weatherActivityHomeBinding.layout.humidityTv.setText(humidity + "%");
+        Log.i(TAG, "UI updated: " + name);
     }
 
     private void checkUpdate() {
@@ -364,6 +357,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherActivityHomeBinding.layout.searchBarIv.setOnClickListener(view ->
                 searchCity(weatherActivityHomeBinding.layout.cityEt.getText().toString()));
         weatherActivityHomeBinding.layout.searchBarIv.setOnTouchListener((view, motionEvent) -> {
+            searchCity(weatherActivityHomeBinding.layout.cityEt.getText().toString());
             hideKeyboard(view);
             return false;
         });
@@ -455,11 +449,14 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
             try {
                 LocationCord.lat = response.getJSONObject("coord").getString("lat");
                 LocationCord.lon = response.getJSONObject("coord").getString("lon");
-                getTodayWeatherInfo(cityName);
+//                getTodayWeatherInfo(cityName);
                 // After the successfully city search the cityEt(editText) is Empty.
+                weatherFetcher.fetchWeatherData(this);
                 weatherActivityHomeBinding.layout.cityEt.setText("");
+                Log.i(TAG, "City updated");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.i(TAG, "City updated failed");
             }
         }, error -> Toaster.errorToast(requireContext(), "Please enter the correct city name"));
         requestQueue.add(jsonObjectRequest);

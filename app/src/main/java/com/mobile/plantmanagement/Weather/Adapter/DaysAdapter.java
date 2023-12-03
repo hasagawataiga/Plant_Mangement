@@ -131,6 +131,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         holder.pressure.setText(pressure + " mb");
         holder.wind.setText(wind_speed + " km/h");
         holder.humidity.setText(humidity + "%");
+        hideProgressBar(holder);
 //        holder.icon.setImageResource(
 //                context.getResources().getIdentifier(
 //                        UpdateUI.getIconID(condition, update_time, sunrise, sunset),

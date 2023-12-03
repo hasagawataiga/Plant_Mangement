@@ -27,7 +27,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerInParent="true"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:SpinKit_Color="@color/textColor" />
 
 
