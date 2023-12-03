@@ -32,8 +32,8 @@ public class WeatherFetcher {
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        this.latitude = LocationCord.lat;
-        this.longitude = LocationCord.lon;
+        // Updated City coordinate
+        setLocation(LocationCord.lon, LocationCord.lat);
         WeatherAPI weatherAPI = retrofit.create(WeatherAPI.class);
         Call<WeatherResponse> call = weatherAPI.getWeather(latitude, longitude, appid, units);
         call.enqueue(new Callback<WeatherResponse>() {

@@ -46,9 +46,9 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         this.context = context;
     }
 
-    private String updated_at, icon;
+    private String updated_at, icon, update_time;
     private int condition, pressure, wind_speed, humidity;
-    private long update_time, sunset, sunrise, min_temperature, max_temperature;
+    private long sunset, sunrise, min_temperature, max_temperature;
     private final static String TAG = "WEATHER_FETCHER";
 
     @NonNull
@@ -77,17 +77,19 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
                 .into(holder.icon);
 
         // Holder for new approach
-        String timeString = weatherDataList.get(i).getTime();
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        Date date;
-        try {
-            date = inputFormat.parse(timeString);
-        } catch (ParseException e) {
-            e.printStackTrace(); // Handle the parsing exception appropriately
-            return;
-        }
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
-        updated_at = dayFormat.format(date);
+//        String timeString = weatherDataList.get(i).getTime();
+//        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+//        Date date;
+//        try {
+//            date = inputFormat.parse(timeString);
+//        } catch (ParseException e) {
+//            e.printStackTrace(); // Handle the parsing exception appropriately
+//            return;
+//        }
+//        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+//        updated_at = dayFormat.format(date);
+        updated_at = extractDateOfWeek(weatherDataList.get(i).getTime());
+        update_time = extractTimeOfDay(weatherDataList.get(i).getTime());
         min_temperature = Math.round(weatherDataList.get(i).getTempMin());
         max_temperature = Math.round(weatherDataList.get(i).getTempMax());
         pressure = weatherDataList.get(i).getPressure();
@@ -125,6 +127,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
     @SuppressLint("SetTextI18n")
     private void updateUI(DayViewHolder holder) {
         String day = UpdateUI.TranslateDay(updated_at, context);
+        holder.hour.setText(update_time);
         holder.dTime.setText(day);
         holder.temp_min.setText(min_temperature + "°C");
         holder.temp_max.setText(max_temperature + "°C");
@@ -140,6 +143,34 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
 //                ));
     }
 
+    private String extractDateOfWeek(String dateTime) {
+        // Holder for new approach
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+        Date date;
+        try {
+            date = inputFormat.parse(dateTime);
+            return dayFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the parsing exception appropriately
+            return "";
+        }
+    }
+
+    private String extractTimeOfDay(String dateTime) {
+        // Holder for new approach
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm a", Locale.US);
+        Date date;
+        try {
+            date = inputFormat.parse(dateTime);
+            return timeFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the parsing exception appropriately
+            return "";
+        }
+    }
+
     private void hideProgressBar(DayViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.layout.setVisibility(View.VISIBLE);
@@ -150,6 +181,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         RelativeLayout layout;
         TextView dTime, temp_min, temp_max, pressure, wind, humidity;
         ImageView icon;
+        TextView hour;
 
         public DayViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -162,6 +194,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
             wind = itemView.findViewById(R.id.day_wind);
             humidity = itemView.findViewById(R.id.day_humidity);
             icon = itemView.findViewById(R.id.day_icon);
+            hour = itemView.findViewById(R.id.hour);
         }
     }
 }
