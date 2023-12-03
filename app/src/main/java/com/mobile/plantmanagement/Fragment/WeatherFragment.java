@@ -27,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -44,6 +45,7 @@ import com.mobile.plantmanagement.WeatherFetcher;
 import com.mobile.plantmanagement.WeatherViewModel;
 import com.mobile.plantmanagement.api.*;
 import com.mobile.plantmanagement.databinding.WeatherActivityHomeBinding;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -73,8 +75,8 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     private final int WEATHER_FORECAST_APP_UPDATE_REQ_CODE = 101;   // for app update
     private static final int PERMISSION_CODE = 1;                   // for user location permission
     private String name, updated_at, description;
-    private int pressure;
-    private double humidity, temperature, min_temperature, max_temperature, wind_speed;
+    private int pressure, humidity;
+    private String temperature, min_temperature, max_temperature, wind_speed;
     private String city = "";
     private final int REQUEST_CODE_EXTRA_INPUT = 101;
     private WeatherActivityHomeBinding weatherActivityHomeBinding;
@@ -186,12 +188,27 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     private void updateUI(WeatherData weatherData) {
         name = weatherData.getCityName();
         // Holder For old approach
-        Picasso.get()
-                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + ".png")
-                .fit()
-                .centerCrop()
+//        Picasso.get()
+//                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + ".png")
+//                .fit()
+//                .centerCrop()
+//                .into(weatherActivityHomeBinding.layout.conditionIv);
+        Glide.with(getContext())
+                .load("https://openweathermap.org/img/wn/" + weatherData.getIcon() + "@4x.png")
+                .fitCenter()
                 .into(weatherActivityHomeBinding.layout.conditionIv);
-
+        Log.d(TAG, "https://openweathermap.org/img/wn/" + weatherData.getIcon() + "@4x.png");
+//                .into(weatherActivityHomeBinding.layout.conditionIv, new Callback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        Log.d(TAG, "Picasso - Image loaded successfully");
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception e) {
+//                        Log.e(TAG, "Picasso - Error loading image: " + e.getMessage());
+//                    }
+//                });
         // Holder for new approach
         String timeString = weatherData.getTime();
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -206,11 +223,11 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         updated_at = dayFormat.format(date);
 
         description = weatherData.getDescriptionLabel();
-        temperature = Math.round(weatherData.getTemp());
-        min_temperature = Math.round(weatherData.getTempMin());
-        max_temperature = Math.round(weatherData.getTempMax());
+        temperature = String.format("%.2f", weatherData.getTemp());
+        min_temperature = String.format("%.2f", weatherData.getTempMin());
+        max_temperature = String.format("%.2f", weatherData.getTempMax());
         pressure = weatherData.getPressure();
-        wind_speed = Math.round(weatherData.getWindSpeed());
+        wind_speed = String.format("%.2f", weatherData.getWindSpeed());
         humidity = weatherData.getHumidity();
         weatherActivityHomeBinding.layout.nameTv.setText(name);
         weatherActivityHomeBinding.layout.updatedAtTv.setText(updated_at);
@@ -295,7 +312,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
                 //it was deprecated but still work
                 startActivityForResult(intent, REQUEST_CODE_EXTRA_INPUT);
             } catch (Exception e) {
-                Log.d("Error Voice", "Mic Error:  " + e);
+                Log.d(TAG, "Mic Error:  " + e);
             }
         });
     }
