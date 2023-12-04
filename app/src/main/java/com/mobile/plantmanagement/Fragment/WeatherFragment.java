@@ -131,6 +131,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherFetcher = new WeatherFetcher();
         weatherFetcher.fetchWeatherData(this);
         weatherViewModel.getWeatherDataList().observe(getViewLifecycleOwner(), list -> {
+            hideMainLayout();
             weatherDataList = list;
             updateUI(weatherDataList.get(0));
             setUpDaysRecyclerView(list);
@@ -139,6 +140,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
 //                    new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 //            );
 //            weatherActivityHomeBinding.dayRv.setAdapter(daysAdapter);
+            hideProgressBar();
             Log.d(TAG, "Data changed: " + list.get(0).getCityName());
         });
         return view;
@@ -187,29 +189,13 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
     @SuppressLint("SetTextI18n")
     private void updateUI(WeatherData weatherData) {
         name = weatherData.getCityName();
-        // Holder For old approach
-//        Picasso.get()
-//                .load("http://openweathermap.org/img/wn/" + weatherData.getIcon() + ".png")
-//                .fit()
-//                .centerCrop()
-//                .into(weatherActivityHomeBinding.layout.conditionIv);
+        // Condition Icon
         Glide.with(getContext())
                 .load("https://openweathermap.org/img/wn/" + weatherData.getIcon() + "@4x.png")
                 .fitCenter()
                 .into(weatherActivityHomeBinding.layout.conditionIv);
         Log.d(TAG, "https://openweathermap.org/img/wn/" + weatherData.getIcon() + "@4x.png");
-//                .into(weatherActivityHomeBinding.layout.conditionIv, new Callback() {
-//                    @Override
-//                    public void onSuccess() {
-//                        Log.d(TAG, "Picasso - Image loaded successfully");
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//                        Log.e(TAG, "Picasso - Error loading image: " + e.getMessage());
-//                    }
-//                });
-        // Holder for new approach
+        // Convert date and time into day of week
         String timeString = weatherData.getTime();
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date date;
@@ -341,22 +327,24 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherActivityHomeBinding.layout.mainLayout.setVisibility(View.VISIBLE);
     }
 
+    private void hideMainLayout() {
+        weatherActivityHomeBinding.layout.mainLayout.setVisibility(View.GONE);
+        weatherActivityHomeBinding.progress.setVisibility(View.VISIBLE);
+    }
+
     private void hideKeyboard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void hideMainLayout() {
-        weatherActivityHomeBinding.progress.setVisibility(View.VISIBLE);
-        weatherActivityHomeBinding.layout.mainLayout.setVisibility(View.GONE);
-    }
-
     private void searchCity(String cityName) {
+        hideMainLayout();
         if (cityName == null || cityName.isEmpty()) {
             Toaster.errorToast(requireContext(), "Please enter the city name");
         } else {
             setLatitudeLongitudeUsingCity(cityName);
         }
+        hideProgressBar();
     }
 
     private void setLatitudeLongitudeUsingCity(String cityName) {
