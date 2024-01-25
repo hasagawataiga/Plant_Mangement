@@ -1,4 +1,4 @@
-package com.mobile.plantmanagement;
+package com.mobile.plantmanagement.Calendar;
 
 public class CalendarEvent {
     private String name;

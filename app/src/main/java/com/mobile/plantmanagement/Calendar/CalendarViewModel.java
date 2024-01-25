@@ -1,4 +1,4 @@
-package com.mobile.plantmanagement;
+package com.mobile.plantmanagement.Calendar;
 
 import static java.util.Objects.requireNonNull;
 
@@ -63,10 +63,11 @@ public class CalendarViewModel extends AndroidViewModel {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "Retrieving Note");
                         if (dataSnapshot.exists()) {
                             GenericTypeIndicator<Map<String, Object>> genericType = new GenericTypeIndicator<Map<String, Object>>() {};
                             selectedDateNotes.setValue(dataSnapshot.getValue(genericType));
-                            Log.d(TAG, selectedDateNotes.toString());
+                            Log.d(TAG, "Retrieve Note Successful");
                         } else {
                             selectedDateNotes.setValue(null);
                         }
@@ -86,14 +87,15 @@ public class CalendarViewModel extends AndroidViewModel {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "Retrieving Events");
                         if (dataSnapshot.exists()) {
                             GenericTypeIndicator<Map<String, Object>> genericType = new GenericTypeIndicator<Map<String, Object>>() {};
                             selectedDateEvents.setValue(dataSnapshot.getValue(genericType));
-                            Log.d(TAG, selectedDateEvents.toString());
+                            Log.d(TAG, "Retrieve Events Successful");
                         } else {
                             selectedDateEvents.setValue(null);
+                            Log.d(TAG, "Retrieve Events Failed");
                         }
-                        Log.d(TAG, "Retrieving Events Successful");
                     }
 
                     @Override

@@ -40,13 +40,11 @@ import com.mobile.plantmanagement.Weather.Adapter.DaysAdapter;
 import com.mobile.plantmanagement.Weather.Location.LocationCord;
 import com.mobile.plantmanagement.Weather.Toast.Toaster;
 import com.mobile.plantmanagement.Weather.Url.URL;
-import com.mobile.plantmanagement.WeatherCallback;
-import com.mobile.plantmanagement.WeatherFetcher;
-import com.mobile.plantmanagement.WeatherViewModel;
+import com.mobile.plantmanagement.Weather.WeatherCallback;
+import com.mobile.plantmanagement.Weather.WeatherFetcher;
+import com.mobile.plantmanagement.Weather.WeatherViewModel;
 import com.mobile.plantmanagement.api.*;
 import com.mobile.plantmanagement.databinding.WeatherActivityHomeBinding;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
