@@ -9,29 +9,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.plantmanagement.Calendar.Adapter.EventListAdapter;
 import com.mobile.plantmanagement.Calendar.Adapter.NoteListAdapter;
-import com.mobile.plantmanagement.Calendar.CalendarEvenListItem;
 import com.mobile.plantmanagement.Calendar.CalendarEvent;
 import com.mobile.plantmanagement.Calendar.CalendarNotes;
 import com.mobile.plantmanagement.Calendar.CalendarViewModel;
@@ -72,8 +63,6 @@ public class CalendarFragment extends Fragment {
     Button addBtnPanel;
     Button cancelBtnPanel;
 
-    // Declaration of storing sets (events and notes)
-    Map <String, Object> notes;
     private CalendarViewModel calendarViewModel;
     private EventListAdapter eventListAdapter;
     private NoteListAdapter noteListAdapter;
@@ -216,7 +205,7 @@ public class CalendarFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Handle item click here
                 CalendarEvent selectedItem = eventList.get(position);
-                Toast.makeText(getContext(), "Clicked: " + selectedItem.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Clicked: " + selectedItem.getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -227,8 +216,6 @@ public class CalendarFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // get the date of datePicker view when the fragment firstly initialize
-//        getDatePicked(datePicker);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -258,13 +245,5 @@ public class CalendarFragment extends Fragment {
         Map <String, Object> events = new HashMap<>();
         events.put(name, content);
         calendarViewModel.updateEvents(datePicked, events);
-    }
-
-    private void resetNotepad(EditText editText){
-        editText.setText("");
-    }
-
-    private void removeAllChildViews(ViewGroup viewGroup){
-        viewGroup.removeAllViewsInLayout();
     }
 }

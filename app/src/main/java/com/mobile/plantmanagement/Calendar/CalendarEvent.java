@@ -1,53 +1,35 @@
 package com.mobile.plantmanagement.Calendar;
 
 public class CalendarEvent {
-    private String name;
-    private String amount;
-    private String unit;
-    public CalendarEvent(){}
-    public CalendarEvent(String events, String amount) {
-        this.name = events;
-        splitString(amount);
+    private String title;
+    private String content;
+
+    public CalendarEvent(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    private void splitString(String str){
-        String[] arrOfStr = str.split("@", 0);
-        if(arrOfStr.length == 2){
-            this.amount = arrOfStr[0];
-            this.unit = arrOfStr[1];
-        }
+    public String getTitle() {
+        return title;
     }
 
-    public String getName() {
-        return name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getContent() {
+        return content;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
     public String toString() {
         return "CalendarEvent{" +
-                "name='" + name + '\'' +
-                ", amount='" + amount + '\'' +
-                ", unit='" + unit + '\'' +
+                "name='" + title + '\'' +
+                ", amount='" + content + '\'' +
                 '}';
     }
 }

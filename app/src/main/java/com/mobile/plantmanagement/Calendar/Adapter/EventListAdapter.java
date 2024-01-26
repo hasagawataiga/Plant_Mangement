@@ -54,8 +54,8 @@ public class EventListAdapter extends ArrayAdapter<CalendarEvent> {
         TextView titleTextView = convertView.findViewById(R.id.title);
         TextView contentTextView = convertView.findViewById(R.id.content);
 
-        titleTextView.setText(currentEvent.getName());
-        contentTextView.setText(currentEvent.getAmount() + " " + currentEvent.getUnit());
+        titleTextView.setText(currentEvent.getTitle());
+        contentTextView.setText(currentEvent.getContent());
         Log.d(TAG, "Reset Event View successful");
         return convertView;
     }
