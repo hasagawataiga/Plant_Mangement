@@ -9,13 +9,28 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <!--    Add Button-->
+    <LinearLayout
+        android:id="@+id/addBtnContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendarView"
+        android:paddingHorizontal="100dp"
+        android:paddingVertical="10dp">
+        <Button
+            android:id="@+id/addEventBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:text="+"/>
+    </LinearLayout>
 
     <!-- Event List -->
     <ListView
         android:id="@+id/eventListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/calendarView"
+        android:layout_below="@id/addBtnContainer"
         android:paddingHorizontal="40dp"
         android:paddingVertical="10dp"
         android:layout_marginTop="@dimen/_10sdp"
@@ -31,6 +46,80 @@
         android:paddingVertical="10dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"/>
+
+    <!--    Overlay-->
+    <View
+        android:id="@+id/overlayBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"/>
+    <!--    ADD PANEL-->
+    <LinearLayout
+        android:id="@+id/addEventPanel"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/rounded_panel_background"
+        android:padding="25dp"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Title" />
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/contentLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Content" />
+
+        <EditText
+            android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="20dp"
+            android:paddingHorizontal="30dp">
+
+            <Button
+                android:id="@+id/addBtnPanel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="add"
+                android:textAllCaps="true" />
+
+            <Button
+                android:id="@+id/cancelBtnPanel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/addBtnPanel"
+                android:layout_marginLeft="40dp"
+                android:text="back"
+                android:textAllCaps="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
     <!-- New Event Section -->
 <!--    <LinearLayout-->
 <!--        android:id="@+id/newEventLayout"-->

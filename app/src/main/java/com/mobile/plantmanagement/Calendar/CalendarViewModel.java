@@ -129,21 +129,56 @@ public class CalendarViewModel extends AndroidViewModel {
     public void updateEvents(String date, Map<String, Object> events) {
         eventsRef
                 .child(date)
-                .setValue(events)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplication().getBaseContext(), "Events saved", Toast.LENGTH_SHORT).show();
-                        Log.d("CalendarViewModel", "Events saved");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplication().getBaseContext(), "Error saving events", Toast.LENGTH_SHORT).show();
-                        Log.d("CalendarViewModel", "Error saving events", e);
-                    }
-                });
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // Date node does not exist, create a new one
+                    eventsRef
+                            .child(date)
+                            .setValue(events)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplication().getBaseContext(), "Events saved", Toast.LENGTH_SHORT).show();
+                                    Log.d("CalendarViewModel", "Events saved for date: " + date);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplication().getBaseContext(), "Error saving events", Toast.LENGTH_SHORT).show();
+                                    Log.e("CalendarViewModel", "Error saving events for date: " + date, e);
+                                }
+                            });
+                } else {
+                    // Date node already exists, update the events under this date
+                    eventsRef
+                            .child(date)
+                            .updateChildren(events)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplication().getBaseContext(), "Events updated", Toast.LENGTH_SHORT).show();
+                                    Log.d("CalendarViewModel", "Events updated for date: " + date);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplication().getBaseContext(), "Error updating events", Toast.LENGTH_SHORT).show();
+                                    Log.e("CalendarViewModel", "Error updating events for date: " + date, e);
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle potential errors
+                Log.e("CalendarViewModel", "Database Error: " + databaseError.getMessage());
+            }
+        });
     }
 
 

@@ -38,6 +38,8 @@ import com.mobile.plantmanagement.Calendar.CalendarViewModel;
 import com.mobile.plantmanagement.MainActivity;
 import com.mobile.plantmanagement.R;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,28 +61,18 @@ public class CalendarFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     // Declaration of views in Layout
-    DatePicker datePicker;
-    Button home_btn_switcher;
-    TextView home_tv_save;
-    LinearLayout home_eventContainer;
-    EditText home_et_notepad;
-    ImageButton home_btn_addComponent;
-    // New elements
     CalendarView calendarView;
     ListView eventListView;
     ListView noteListView;
-    Spinner activitySpinner;
-    EditText noteEditText;
-    CheckBox checkBox;
     Button addEventButton;
-
-    // Declaration of string-array for spinners
-    String[] units;
-    String[] componentList;
-    ArrayAdapter<String> spinnerArrayAdapter;
+    View overlayBackground;
+    LinearLayout addEventPanel;
+    EditText addedEventTitle;
+    EditText addedEventContent;
+    Button addBtnPanel;
+    Button cancelBtnPanel;
 
     // Declaration of storing sets (events and notes)
-    Map <String, Object> events;
     Map <String, Object> notes;
     private CalendarViewModel calendarViewModel;
     private EventListAdapter eventListAdapter;
@@ -89,9 +81,6 @@ public class CalendarFragment extends Fragment {
     private List<CalendarNotes> noteList;
 
     String datePicked;
-
-    // Switcher between CalendarView spinner/calendar
-    boolean isCalenderUsed = false;
     final String TAG = "CALENDAR FRAGMENT";
 
     public CalendarFragment() {
@@ -129,21 +118,44 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_home, container, false);
-//        datePicker = view.findViewById(R.id.home_dayPicker);
-//        home_tv_save = view.findViewById(R.id.home_tv_save);
-//        home_btn_switcher = view.findViewById(R.id.home_btn_switcher);
-//        home_btn_addComponent = view.findViewById(R.id.home_btn_addComponent);
-//        home_btn_addComponent.setBackgroundResource(R.drawable.btn_add);
-//        home_btn_addComponent.setImageResource(R.drawable.ic_baseline_add_box_24);
-//        home_et_notepad = view.findViewById(R.id.home_et_notepad);
-//        home_linearLayout_componentsContainer = view.findViewById(R.id.home_linearLayout_componentsContainer);
-
         View view = inflater.inflate(R.layout.calendar_main_layout, container, false);
+
+        datePicked = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         // Updated initialization of views for the new layout
         calendarView = view.findViewById(R.id.calendarView);
         eventListView = view.findViewById(R.id.eventListView);
         noteListView = view.findViewById(R.id.noteListView);
+
+        overlayBackground = view.findViewById(R.id.overlayBackground);
+        overlayBackground.setVisibility(View.GONE);
+        addEventButton = view.findViewById(R.id.addEventBtn);
+        addEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddEventPanel();
+            }
+        });
+        addEventPanel = view.findViewById(R.id.addEventPanel);
+        addEventPanel.setVisibility(View.GONE);
+        addedEventTitle = view.findViewById(R.id.et_title);
+        addedEventContent = view.findViewById(R.id.et_content);
+        addBtnPanel = view.findViewById(R.id.addBtnPanel);
+        addBtnPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEvent();
+                closeAddEventPanel();
+            }
+        });
+        cancelBtnPanel = view.findViewById(R.id.cancelBtnPanel);
+        cancelBtnPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeAddEventPanel();
+            }
+        });
+
         // Initialize the adapter
         eventList = new ArrayList<>();
         eventListAdapter = new EventListAdapter(getContext(), R.layout.calendar_event_list_layout, eventList);
@@ -151,30 +163,16 @@ public class CalendarFragment extends Fragment {
         noteList = new ArrayList<>();
         noteListAdapter = new NoteListAdapter(getContext(), R.layout.calendar_note_list_layout, noteList);
         noteListView.setAdapter(noteListAdapter);
-//        activitySpinner = view.findViewById(R.id.activitySpinner);
-//        noteEditText = view.findViewById(R.id.noteEditText);
-//        checkBox = view.findViewById(R.id.checkBox);
-//        addEventButton = view.findViewById(R.id.addEventButton);
 
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.hideDisplayHomeUp();
-
-        // Set the date picked always be the current day in real-time
-//        Calendar calendar = Calendar.getInstance();
-//        datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         // LiveData declaration
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
         calendarViewModel.getSelectedDateNotes().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(Map<String, Object> notes) {
-//                resetNotepad(home_et_notepad);
-//                if (notes != null){
-//                    CalendarNotes calendarNotes = new CalendarNotes(notes.get("content"));
-//                    home_et_notepad.setText(calendarNotes.getContent());
-//                    Log.d(TAG, "Get notes: " + calendarNotes.getContent());
-//                }
                 if (notes != null) {
                     Log.d(TAG, "Notes Data changed (Updated)");
                     noteListAdapter.clear();
@@ -189,17 +187,6 @@ public class CalendarFragment extends Fragment {
         calendarViewModel.getSelectedDateEvents().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
             @Override
             public void onChanged(Map<String, Object> events) {
-//                removeAllChildViews(home_eventContainer);
-//                if (events != null){
-//                    for(Map.Entry<String, Object> entry : events.entrySet()){
-//                        CalendarEvent event = new CalendarEvent(entry.getKey(), (String) entry.getValue());
-//                        String name = event.getName();
-//                        String amount = event.getAmount();
-//                        String unit = event.getUnit();
-//                        Log.d(TAG, name + ": " + amount + " " + unit);
-//                        addComponent(name, amount, unit);
-//                    }
-//                }
                 if (events != null) {
                     Log.d(TAG, "Events Data changed (Updated)");
                     eventListAdapter.clear();
@@ -220,11 +207,6 @@ public class CalendarFragment extends Fragment {
                 calendarViewModel.retrieveEvents(datePicked);
                 calendarViewModel.retrieveNotes(datePicked);
                 Log.d(TAG, "Date Picked: " + datePicked);
-//                if (events != null) {
-//                    eventListAdapter.clear();
-//                    eventListAdapter.addAll(events);
-//                    eventListAdapter.notifyDataSetChanged();
-//                }
                 Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
             }
         });
@@ -254,89 +236,29 @@ public class CalendarFragment extends Fragment {
                 calendarViewModel.retrieveEvents(datePicked);
                 calendarViewModel.retrieveNotes(datePicked);
                 Log.d(TAG, "Date Picked: " + datePicked);
-//                if (events != null) {
-//                    eventListAdapter.clear();
-//                    eventListAdapter.addAll(events);
-//                    eventListAdapter.notifyDataSetChanged();
-//                }
                 Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
             }
         });
-//        datePicker.setOnDateChangedListener((datePicker, i, i1, i2) -> {
-//            // Reset all views of events/notes
-//            removeAllChildViews(home_eventContainer);
-//            resetNotepad(home_et_notepad);
-//            getDatePicked(datePicker);
-//            // Retrieve data from database to ViewModel
-//            calendarViewModel.retrieveEvents(datePicked);
-//            calendarViewModel.retrieveNotes(datePicked);
-//            Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
-//        });
-//
-//        // Switcher for the type of CalendarView
-//        home_btn_switcher.setOnClickListener(view12 -> {
-//            if(isCalenderUsed){
-//                datePicker.setSpinnersShown(true);
-//                datePicker.setCalendarViewShown(false);
-//                isCalenderUsed = false;
-//            }else{
-//                datePicker.setSpinnersShown(false);
-//                datePicker.setCalendarViewShown(true);
-//                isCalenderUsed = true;
-//            }
-//        });
-
-        // Add below "add" button a column as a component
-//        home_btn_addComponent.setOnClickListener(view1 -> addComponent("", "", ""));
-//
-//        home_tv_save.setOnClickListener(v -> {
-//            events = saveAllEvents();
-//            calendarViewModel.updateEvents(datePicked, events);
-//            notes = saveAllNotes();
-//            calendarViewModel.updateNotes(datePicked, notes);
-//        });
-
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void getDatePicked(DatePicker datePicker){
-        int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth() + 1;
-        int year = datePicker.getYear();
-        // Format the date to be always as YYYY-MM-DD
-        datePicked = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+    private void showAddEventPanel() {
+        addEventPanel.setVisibility(View.VISIBLE);
+        overlayBackground.setVisibility(View.VISIBLE);
     }
 
-//    private Map<String, Object> saveAllNotes(){
-//        Map<String, Object> notes = new HashMap<>();
-//        try{
-//            notes.put("content", home_et_notepad.getText().toString());
-//        }catch (Exception e){
-//            Log.d(TAG, "Error saving Notes content", e);
-//        }
-//        return notes;
-//    }
+    private void closeAddEventPanel() {
+        addEventPanel.setVisibility(View.GONE);
+        overlayBackground.setVisibility(View.GONE);
+    }
 
-//    @NonNull
-//    private Map<String, Object> saveAllEvents(){
-//        Map <String, Object> events = new HashMap<String, Object>();
-//        for (int i = 0; i < home_eventContainer.getChildCount(); i++){
-//            try{
-//                LinearLayout linearLayout = (LinearLayout) home_eventContainer.getChildAt(i);
-//                Spinner spinner_name = (Spinner) linearLayout.getChildAt(1);
-//                EditText et_amount = (EditText) linearLayout.getChildAt(2);
-//                Spinner spinner_unit = (Spinner) linearLayout.getChildAt(3);
-//                String name = spinner_name.getSelectedItem().toString();
-//                String amount = et_amount.getText().toString();
-//                String unit = spinner_unit.getSelectedItem().toString();
-//                events.put(name, amount + "@" + unit);
-//                Log.d(TAG, events.toString());
-//            }catch(Exception e){
-//                Log.d(TAG, "Error saving events and notes", e);
-//            }
-//        }
-//        return events;
-//    }
+    private void saveEvent() {
+        String name = addedEventTitle.getText().toString();
+        String content = addedEventContent.getText().toString();
+        Map <String, Object> events = new HashMap<>();
+        events.put(name, content);
+        calendarViewModel.updateEvents(datePicked, events);
+    }
 
     private void resetNotepad(EditText editText){
         editText.setText("");
@@ -345,75 +267,4 @@ public class CalendarFragment extends Fragment {
     private void removeAllChildViews(ViewGroup viewGroup){
         viewGroup.removeAllViewsInLayout();
     }
-
-
-    // Add a linearLayout included a button, a spinner, an editText, and a spinner
-//    public void addComponent(String name, String amount, String unit) {
-//        Log.d(TAG, "Starting adding events");
-//
-//        // Init the linearLayout contains the views of component
-//        LinearLayout parent = new LinearLayout(getContext());
-//        parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        parent.setOrientation(LinearLayout.HORIZONTAL);
-//        home_eventContainer.addView(parent);
-//
-//        // Init attributes of component
-//        // deleteButton
-//        ImageButton btn_del = new ImageButton(getContext());
-//        btn_del.setLayoutParams(new LinearLayout.LayoutParams(70,70));
-//        btn_del.setForegroundGravity(Gravity.CENTER_VERTICAL);
-//        btn_del.setBackgroundResource(R.drawable.btn_del);
-//        btn_del.setImageResource(R.drawable.ic_baseline_horizontal_rule_24);
-//        // remove all views of the column onClickListener
-//        btn_del.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ((ViewGroup) parent.getParent()).removeView(parent);
-//                Log.d(TAG, "delete button clicked.");
-//            }
-//        });
-//
-//        // Label of component
-//        Spinner spinner_component = new Spinner(getContext());
-//        spinner_component.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        componentList = getActivity().getResources().getStringArray(R.array.components);
-//        spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, componentList);
-//        spinner_component.setAdapter(spinnerArrayAdapter);
-//        spinner_component.setGravity(Gravity.LEFT);
-//        // Set the value of spinner if there is already event was saved on the date
-//        if(name != ""){
-//            int index = spinnerArrayAdapter.getPosition(name);
-//            spinner_component.setSelection(index);
-//            Log.d(TAG, "index of label entry" + index);
-//        }
-//
-//        // Details of component
-//        EditText et_details = new EditText(getContext());
-//        et_details.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        et_details.setHint("amount");
-//        et_details.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        // Set the value of editText if there is already event was saved on the date
-//        if(amount != ""){
-//            et_details.setText(amount);
-//        }
-//
-//        // Units of component
-//        Spinner spinner_unit = new Spinner(getContext());
-//        spinner_unit.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        units = getActivity().getResources().getStringArray(R.array.units);
-//        spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, units);
-//        spinner_unit.setAdapter(spinnerArrayAdapter);
-//        spinner_unit.setGravity(Gravity.RIGHT);
-//        // Set the value of spinner if there is already event was saved on the date
-//        if(unit != ""){
-//            int index2 = spinnerArrayAdapter.getPosition(unit);
-//            spinner_unit.setSelection(index2);
-//        }
-//
-//        // Add those views to container (LinearLayout named parent)
-//        parent.addView(btn_del);
-//        parent.addView(spinner_component);
-//        parent.addView(et_details);
-//        parent.addView(spinner_unit);
-//    }
 }
