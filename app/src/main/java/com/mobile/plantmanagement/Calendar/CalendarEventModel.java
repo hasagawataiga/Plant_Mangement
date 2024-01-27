@@ -8,77 +8,36 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-public class CalendarViewModel extends AndroidViewModel {
+public class CalendarEventModel extends AndroidViewModel {
     private final String TAG = "CALENDAR_VIEW_MODEL";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private MutableLiveData<Map<String, Object>> selectedDateEvents = new MutableLiveData<>();
-    private MutableLiveData<Map<String, Object>> selectedDateNotes = new MutableLiveData<>();
 //    private CollectionReference calendarCollection = db.collection("Calendar");
 //    private CollectionReference notesCollection = db.collection("Notes");
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference eventsRef = database.getReference("Calendar");
-    private DatabaseReference notesRef = database.getReference("Note");
-    public CalendarViewModel(@NonNull Application application) {
+    public CalendarEventModel(@NonNull Application application) {
         super(application);
     }
 
     public MutableLiveData<Map<String, Object>> getSelectedDateEvents() {
         return selectedDateEvents;
-    }
-    public MutableLiveData<Map<String, Object>> getSelectedDateNotes(){
-        return selectedDateNotes;
-    }
-
-    public void retrieveNotes(String date) {
-        notesRef
-                .child(date)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG, "Retrieving Note");
-                        if (dataSnapshot.exists()) {
-                            GenericTypeIndicator<Map<String, Object>> genericType = new GenericTypeIndicator<Map<String, Object>>() {};
-                            selectedDateNotes.setValue(dataSnapshot.getValue(genericType));
-                            Log.d(TAG, "Retrieve Note Successful");
-                        } else {
-                            selectedDateNotes.setValue(null);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        selectedDateNotes.setValue(null);
-                        Log.d(TAG, "Error retrieving notes", databaseError.toException());
-                    }
-                });
     }
 
     public void retrieveEvents(String date) {
@@ -102,26 +61,6 @@ public class CalendarViewModel extends AndroidViewModel {
                     public void onCancelled(DatabaseError databaseError) {
                         selectedDateEvents.setValue(null);
                         Log.d(TAG, "Error retrieving events", databaseError.toException());
-                    }
-                });
-    }
-
-    public void updateNotes(String date, Map<String, Object> notes){
-        notesRef
-                .child(date)
-                .setValue(notes)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplication().getBaseContext(), "Notes saved", Toast.LENGTH_SHORT).show();
-                        Log.d("CalendarViewModel", "Notes saved");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplication().getBaseContext(), "Error saving notes", Toast.LENGTH_SHORT).show();
-                        Log.d("CalendarViewModel", "Error saving notes", e);
                     }
                 });
     }
@@ -181,7 +120,26 @@ public class CalendarViewModel extends AndroidViewModel {
         });
     }
 
-
+    public void deleteEvent(String date, CalendarEvent event) {
+        eventsRef
+                .child(date)
+                .child(event.getTitle())
+                .removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplication().getBaseContext(), "Event removed", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Event removed: " + event.getTitle() + " from date: " + date);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplication().getBaseContext(), "Error removing event", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Error removing event: " + event.getTitle() + " from date: " + date, e);
+                    }
+                });
+    }
 //    public void retrieveNotes(String date){
 //        notesCollection
 //                .document(date)
