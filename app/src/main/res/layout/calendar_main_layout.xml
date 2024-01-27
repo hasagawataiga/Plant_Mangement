@@ -31,19 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/addBtnContainer"
-        android:paddingHorizontal="40dp"
+        android:paddingHorizontal="30dp"
         android:paddingVertical="10dp"
         android:layout_marginTop="@dimen/_10sdp"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
-    <!--    Note List-->
-    <ListView
-        android:id="@+id/noteListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eventListView"
-        android:paddingHorizontal="40dp"
-        android:paddingVertical="10dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"/>
 
