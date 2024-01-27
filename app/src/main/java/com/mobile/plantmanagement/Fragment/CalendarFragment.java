@@ -22,9 +22,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mobile.plantmanagement.Calendar.Adapter.EventListAdapter;
-import com.mobile.plantmanagement.Calendar.Adapter.NoteListAdapter;
 import com.mobile.plantmanagement.Calendar.CalendarEvent;
-import com.mobile.plantmanagement.Calendar.CalendarNotes;
 import com.mobile.plantmanagement.Calendar.CalendarEventModel;
 import com.mobile.plantmanagement.MainActivity;
 import com.mobile.plantmanagement.R;
@@ -35,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +53,6 @@ public class CalendarFragment extends Fragment {
     // Declaration of views in Layout
     CalendarView calendarView;
     ListView eventListView;
-    ListView noteListView;
     Button addEventButton;
     View overlayBackground;
     LinearLayout addEventPanel;
@@ -116,62 +114,52 @@ public class CalendarFragment extends Fragment {
         overlayBackground = view.findViewById(R.id.overlayBackground);
         overlayBackground.setVisibility(View.GONE);
         addEventButton = view.findViewById(R.id.addEventBtn);
-        addEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddEventPanel();
-            }
-        });
+        addEventButton.setOnClickListener(v -> showAddEventPanel());
         addEventPanel = view.findViewById(R.id.addEventPanel);
         addEventPanel.setVisibility(View.GONE);
         addedEventTitle = view.findViewById(R.id.et_title);
         addedEventContent = view.findViewById(R.id.et_content);
         addBtnPanel = view.findViewById(R.id.addBtnPanel);
-        addBtnPanel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveEvent();
-                closeAddEventPanel();
-            }
+        addBtnPanel.setOnClickListener(v -> {
+            saveEvent();
+            closeAddEventPanel();
         });
         cancelBtnPanel = view.findViewById(R.id.cancelBtnPanel);
-        cancelBtnPanel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeAddEventPanel();
-            }
-        });
+        cancelBtnPanel.setOnClickListener(v -> closeAddEventPanel());
 
         // Hide the display home button as up button
         MainActivity mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
         mainActivity.hideDisplayHomeUp();
 
         // LiveData declaration
         calendarEventModel = new ViewModelProvider(this).get(CalendarEventModel.class);
-        calendarEventModel.getSelectedDateEvents().observe(getViewLifecycleOwner(), new Observer<Map<String, Object>>() {
-            @Override
-            public void onChanged(Map<String, Object> events) {
-                eventListAdapter.setDate(datePicked);
-                eventListAdapter.removeAll();
-                if (events != null) {
-                    Log.d(TAG, "Events Data changed (Updated)");
-                    eventListAdapter.addAll(events);
-                }
-                eventListAdapter.notifyDataSetChanged();
+        calendarEventModel.getSelectedDateEvents().observe(getViewLifecycleOwner(), events -> {
+            eventListAdapter.setDate(datePicked);
+            eventListAdapter.removeAll();
+            if (events != null) {
+                Log.d(TAG, "Events Data changed (Updated)");
+                eventListAdapter.addAll(events);
             }
+            eventListAdapter.notifyDataSetChanged();
         });
 
         // Initialize the adapter
         eventList = new ArrayList<>();
-        eventListAdapter = new EventListAdapter(getContext(), R.layout.calendar_event_list_layout, eventList, calendarEventModel);
+        eventListAdapter = new EventListAdapter(requireContext(), R.layout.calendar_event_list_layout, eventList, calendarEventModel);
         eventListView.setAdapter(eventListAdapter);
-        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Handle item click here
-                CalendarEvent selectedItem = eventListAdapter.getEventList().get(position);
-                Toast.makeText(getContext(), "Clicked: " + selectedItem.getTitle(), Toast.LENGTH_SHORT).show();
-            }
+
+        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+            datePicked = year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", dayOfMonth);
+            calendarEventModel.retrieveEvents(datePicked);
+            Log.d(TAG, "Change Date picked to: " + datePicked);
+            Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
+        });
+
+        eventListView.setOnItemClickListener((parent, view12, position, id) -> {
+            // Handle item click here
+            CalendarEvent selectedItem = eventListAdapter.getEventList().get(position);
+            Toast.makeText(getContext(), "Clicked: " + selectedItem.getTitle(), Toast.LENGTH_SHORT).show();
         });
 
         // Inflate the layout for this fragment
@@ -181,15 +169,6 @@ public class CalendarFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                datePicked = year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", dayOfMonth);
-                calendarEventModel.retrieveEvents(datePicked);
-                Log.d(TAG, "Change Date picked to: " + datePicked);
-                Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
-            }
-        });
         // Fetch the current date events (initialize) when switching to Calendar Fragment
         calendarEventModel.retrieveEvents(datePicked);
         super.onViewCreated(view, savedInstanceState);
