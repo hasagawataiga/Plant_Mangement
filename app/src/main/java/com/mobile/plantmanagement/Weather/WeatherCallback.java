@@ -1,4 +1,4 @@
-package com.mobile.plantmanagement;
+package com.mobile.plantmanagement.Weather;
 
 import com.mobile.plantmanagement.api.WeatherData;
 

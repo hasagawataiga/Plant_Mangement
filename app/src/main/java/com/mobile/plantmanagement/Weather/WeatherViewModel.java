@@ -1,4 +1,4 @@
-package com.mobile.plantmanagement;
+package com.mobile.plantmanagement.Weather;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -31,7 +31,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         appMode = findPreference("appMode");
         aboutUs = findPreference("aboutUs");
         version = findPreference("version");
-
         // Check the theme settings at the beginning whether dark mode is enabled, and set the title of SwitchPreferenceCompat accordingly to the theme settings
         isDarkMode();
 

@@ -1,0 +1,50 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/cardview_light_background">
+
+    <!-- Delete Button -->
+    <ImageButton
+        android:id="@+id/btn_del"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/btn_del"
+        app:tint="?attr/colorOnBackground" />
+
+    <!-- Component Spinner -->
+    <Spinner
+        android:id="@+id/spinner_component"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="start"
+        android:textAlignment="viewStart"/>
+
+    <!-- Details EditText -->
+    <EditText
+        android:id="@+id/et_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:inputType="number"/>
+
+    <!-- Unit Spinner -->
+    <Spinner
+        android:id="@+id/spinner_unit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="end"
+        android:textAlignment="viewEnd"/>
+</LinearLayout>

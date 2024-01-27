@@ -13,19 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.mobile.plantmanagement.R;
 import com.mobile.plantmanagement.Weather.Update.UpdateUI;
-import com.mobile.plantmanagement.Weather.Url.URL;
 import com.github.ybq.android.spinkit.SpinKitView;
-import com.mobile.plantmanagement.api.WeatherAdapter;
 import com.mobile.plantmanagement.api.WeatherData;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,9 +38,9 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         this.context = context;
     }
 
-    private String updated_at, icon;
+    private String updated_at, icon, update_time;
     private int condition, pressure, wind_speed, humidity;
-    private long update_time, sunset, sunrise, min_temperature, max_temperature;
+    private long sunset, sunrise, min_temperature, max_temperature;
     private final static String TAG = "WEATHER_FETCHER";
 
     @NonNull
@@ -76,48 +68,14 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
                 .load("http://openweathermap.org/img/wn/" + weatherDataList.get(i).getIcon() + "@" + icon + ".png")
                 .into(holder.icon);
 
-        // Holder for new approach
-        String timeString = weatherDataList.get(i).getTime();
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        Date date;
-        try {
-            date = inputFormat.parse(timeString);
-        } catch (ParseException e) {
-            e.printStackTrace(); // Handle the parsing exception appropriately
-            return;
-        }
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
-        updated_at = dayFormat.format(date);
+        updated_at = extractDateOfWeek(weatherDataList.get(i).getTime());
+        update_time = extractTimeOfDay(weatherDataList.get(i).getTime());
         min_temperature = Math.round(weatherDataList.get(i).getTempMin());
         max_temperature = Math.round(weatherDataList.get(i).getTempMax());
         pressure = weatherDataList.get(i).getPressure();
         wind_speed = Math.round(weatherDataList.get(i).getWindSpeed());
         humidity = weatherDataList.get(i).getHumidity();
 
-//        URL url = new URL();
-//        RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url.getLink(), null, response -> {
-//            try {
-//                update_time = response.getJSONObject("current").getLong("dt");
-//                updated_at = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date((update_time * 1000) + (i * 864_000_00L)));   // i=0
-//
-//                condition = response.getJSONArray("daily").getJSONObject(i).getJSONArray("weather").getJSONObject(0).getInt("id");
-//                sunrise = response.getJSONArray("daily").getJSONObject(i).getLong("sunrise");
-//                sunset = response.getJSONArray("daily").getJSONObject(i).getLong("sunset");
-//
-//                min = String.format("%.0f", response.getJSONArray("daily").getJSONObject(i).getJSONObject("temp").getDouble("min") - 273.15);
-//                max = String.format("%.0f", response.getJSONArray("daily").getJSONObject(i).getJSONObject("temp").getDouble("max") - 273.15);
-//                pressure = response.getJSONArray("daily").getJSONObject(i).getString("pressure");
-//                wind_speed = response.getJSONArray("daily").getJSONObject(i).getString("wind_speed");
-//                humidity = response.getJSONArray("daily").getJSONObject(i).getString("humidity");
-//
-//                updateUI(holder);
-//                hideProgressBar(holder);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }, null);
-//        requestQueue.add(jsonObjectRequest);
         updateUI(holder);
         Log.i(TAG, "Day " + i);
     }
@@ -125,6 +83,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
     @SuppressLint("SetTextI18n")
     private void updateUI(DayViewHolder holder) {
         String day = UpdateUI.TranslateDay(updated_at, context);
+        holder.hour.setText(update_time);
         holder.dTime.setText(day);
         holder.temp_min.setText(min_temperature + "°C");
         holder.temp_max.setText(max_temperature + "°C");
@@ -132,12 +91,34 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         holder.wind.setText(wind_speed + " km/h");
         holder.humidity.setText(humidity + "%");
         hideProgressBar(holder);
-//        holder.icon.setImageResource(
-//                context.getResources().getIdentifier(
-//                        UpdateUI.getIconID(condition, update_time, sunrise, sunset),
-//                        "drawable",
-//                        context.getPackageName()
-//                ));
+    }
+
+    private String extractDateOfWeek(String dateTime) {
+        // Holder for new approach
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+        Date date;
+        try {
+            date = inputFormat.parse(dateTime);
+            return dayFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the parsing exception appropriately
+            return "";
+        }
+    }
+
+    private String extractTimeOfDay(String dateTime) {
+        // Holder for new approach
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm a", Locale.US);
+        Date date;
+        try {
+            date = inputFormat.parse(dateTime);
+            return timeFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the parsing exception appropriately
+            return "";
+        }
     }
 
     private void hideProgressBar(DayViewHolder holder) {
@@ -150,6 +131,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         RelativeLayout layout;
         TextView dTime, temp_min, temp_max, pressure, wind, humidity;
         ImageView icon;
+        TextView hour;
 
         public DayViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -162,6 +144,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
             wind = itemView.findViewById(R.id.day_wind);
             humidity = itemView.findViewById(R.id.day_humidity);
             icon = itemView.findViewById(R.id.day_icon);
+            hour = itemView.findViewById(R.id.hour);
         }
     }
 }
