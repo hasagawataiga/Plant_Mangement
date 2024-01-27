@@ -6,14 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -33,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +47,7 @@ public class CalendarFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     // Declaration of views in Layout
     CalendarView calendarView;
     ListView eventListView;
@@ -110,7 +108,6 @@ public class CalendarFragment extends Fragment {
         // Updated initialization of views for the new layout
         calendarView = view.findViewById(R.id.calendarView);
         eventListView = view.findViewById(R.id.eventListView);
-
         overlayBackground = view.findViewById(R.id.overlayBackground);
         overlayBackground.setVisibility(View.GONE);
         addEventButton = view.findViewById(R.id.addEventBtn);
