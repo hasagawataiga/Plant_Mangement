@@ -69,4 +69,7 @@
     <string name="note_hint">Note</string>
     <string name="add_event_button">ADD</string>
     <string name="select_activity_prompt">Name</string>
+    <string name="event_remove_alert_delete">Delete</string>
+    <string name='event_remove_alert_cancel'>Cancel</string>
+    <string name='event_remove_dialog_message'>Are you want to remove it?</string>
 </resources>

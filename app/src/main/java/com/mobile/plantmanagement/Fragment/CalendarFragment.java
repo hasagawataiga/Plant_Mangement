@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.mobile.plantmanagement.Calendar.Adapter.EventListAdapter;
 import com.mobile.plantmanagement.Calendar.CalendarEvent;
 import com.mobile.plantmanagement.Calendar.CalendarEventModel;
+import com.mobile.plantmanagement.Calendar.Event.EventDetailDialogFragment;
 import com.mobile.plantmanagement.MainActivity;
 import com.mobile.plantmanagement.R;
 
@@ -37,7 +40,7 @@ import java.util.Map;
  * Use the {@link CalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -143,7 +146,7 @@ public class CalendarFragment extends Fragment {
 
         // Initialize the adapter
         eventList = new ArrayList<>();
-        eventListAdapter = new EventListAdapter(requireContext(), R.layout.calendar_event_list_layout, eventList, calendarEventModel);
+        eventListAdapter = new EventListAdapter(getContext(), R.layout.calendar_event_list_layout, eventList, calendarEventModel);
         eventListView.setAdapter(eventListAdapter);
 
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
@@ -152,13 +155,6 @@ public class CalendarFragment extends Fragment {
             Log.d(TAG, "Change Date picked to: " + datePicked);
             Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
         });
-
-        eventListView.setOnItemClickListener((parent, view12, position, id) -> {
-            // Handle item click here
-            CalendarEvent selectedItem = eventListAdapter.getEventList().get(position);
-            Toast.makeText(getContext(), "Clicked: " + selectedItem.getTitle(), Toast.LENGTH_SHORT).show();
-        });
-
         // Inflate the layout for this fragment
         return view;
     }
@@ -168,6 +164,22 @@ public class CalendarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // Fetch the current date events (initialize) when switching to Calendar Fragment
         calendarEventModel.retrieveEvents(datePicked);
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(TAG, "Clicked");
+                String title = eventListAdapter.getEventList().get(position).getTitle();
+                String content = eventListAdapter.getEventList().get(position).getContent();
+                if (getActivity() != null && getActivity().getSupportFragmentManager() != null) {
+                    // Show the event detail popup panel
+                    EventDetailDialogFragment dialogFragment = new EventDetailDialogFragment(title, content);
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), "EventDetailDialogFragment");
+                } else {
+                    // Handle the case where the fragment or its activity is null
+                    Log.e(TAG, "Fragment or activity is null");
+                }
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
 

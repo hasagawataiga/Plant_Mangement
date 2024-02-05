@@ -109,41 +109,4 @@
                 android:textAllCaps="true" />
         </RelativeLayout>
     </LinearLayout>
-
-    <!-- New Event Section -->
-<!--    <LinearLayout-->
-<!--        android:id="@+id/newEventLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/eventListView"-->
-<!--        android:orientation="vertical">-->
-
-<!--        &lt;!&ndash; Type of Activity Spinner &ndash;&gt;-->
-<!--        <Spinner-->
-<!--            android:id="@+id/activitySpinner"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:prompt="@string/select_activity_prompt"/>-->
-
-<!--        &lt;!&ndash; Note EditText &ndash;&gt;-->
-<!--        <EditText-->
-<!--            android:id="@+id/noteEditText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="@string/note_hint"/>-->
-
-<!--        &lt;!&ndash; Check/Uncheck Checkbox &ndash;&gt;-->
-<!--        <CheckBox-->
-<!--            android:id="@+id/checkBox"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        &lt;!&ndash; Button to Add Event &ndash;&gt;-->
-<!--        <Button-->
-<!--            android:id="@+id/addEventButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/add_event_button"/>-->
-<!--    </LinearLayout>-->
-
 </RelativeLayout>

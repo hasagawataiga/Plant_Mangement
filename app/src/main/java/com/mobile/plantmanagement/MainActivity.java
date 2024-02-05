@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
     private void fragmentsController(){
         // Always begin with Home fragment
-//        changeFragment(new WeatherFragment());
         changeFragment(new WeatherFragment());
         // Fragment navigation Controller
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -186,11 +185,10 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
 
     protected void changeFragment(Fragment fragment){
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout1, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout1, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     // Up navigation for fragments
