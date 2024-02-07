@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     TextView tv_signIn;
 
-    final String TAG = "MainActivity";
+    final String TAG = "HOME SCREEN";
     ActivityMainBinding binding;
     FragmentManager fragmentManager;
     ActionBar actionBar;
@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             actionBar.setDisplayShowTitleEnabled(false);
         }
         firebaseUser = firebaseAuth.getCurrentUser();
-
         // Google SignIn
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
@@ -75,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 //        changeFragment(new ProfileFragment());
         // Listen for changes in the back stack of fragments
         getSupportFragmentManager().addOnBackStackChangedListener(this);
+        Log.d(TAG, "firebaseAuth: " + firebaseAuth.getUid() + ", firebaseUser: " + firebaseUser);
     }
 
     @Override
