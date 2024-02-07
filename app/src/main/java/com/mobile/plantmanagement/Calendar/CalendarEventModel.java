@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
@@ -27,11 +28,9 @@ public class CalendarEventModel extends AndroidViewModel {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private MutableLiveData<Map<String, Object>> selectedDateEvents = new MutableLiveData<>();
-//    private CollectionReference calendarCollection = db.collection("Calendar");
-//    private CollectionReference notesCollection = db.collection("Notes");
-
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference eventsRef = database.getReference("Calendar");
+    private String userUID = FirebaseAuth.getInstance().getUid();
+    private DatabaseReference eventsRef = database.getReference("User").child(userUID).child("Event");
     public CalendarEventModel(@NonNull Application application) {
         super(application);
     }

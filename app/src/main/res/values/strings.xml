@@ -72,4 +72,5 @@
     <string name="event_remove_alert_delete">Delete</string>
     <string name='event_remove_alert_cancel'>Cancel</string>
     <string name='event_remove_dialog_message'>Are you want to remove it?</string>
+    <string name="default_web_client_id">260375900054-da7o6hsvu5otqa3adfft6f0kbshktvni.apps.googleusercontent.com</string>
 </resources>
