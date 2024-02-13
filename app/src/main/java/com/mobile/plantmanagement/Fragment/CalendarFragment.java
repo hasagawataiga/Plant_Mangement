@@ -12,13 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.plantmanagement.Calendar.Adapter.EventListAdapter;
@@ -28,11 +29,14 @@ import com.mobile.plantmanagement.Calendar.Event.EventDetailDialogFragment;
 import com.mobile.plantmanagement.MainActivity;
 import com.mobile.plantmanagement.R;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -53,6 +57,7 @@ public class CalendarFragment extends Fragment{
 
     // Declaration of views in Layout
     CalendarView calendarView;
+    TextView tv_pickedDate;
     ListView eventListView;
     Button addEventButton;
     View overlayBackground;
@@ -110,6 +115,8 @@ public class CalendarFragment extends Fragment{
 
         // Updated initialization of views for the new layout
         calendarView = view.findViewById(R.id.calendarView);
+        tv_pickedDate = view.findViewById(R.id.tv_pickedDate);
+        tv_pickedDate.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
         eventListView = view.findViewById(R.id.eventListView);
         overlayBackground = view.findViewById(R.id.overlayBackground);
         overlayBackground.setVisibility(View.GONE);
@@ -150,10 +157,7 @@ public class CalendarFragment extends Fragment{
         eventListView.setAdapter(eventListAdapter);
 
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            datePicked = year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", dayOfMonth);
-            calendarEventModel.retrieveEvents(datePicked);
-            Log.d(TAG, "Change Date picked to: " + datePicked);
-            Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
+            resetEvents(year, month, dayOfMonth);
         });
         // Inflate the layout for this fragment
         return view;
@@ -164,6 +168,8 @@ public class CalendarFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // Fetch the current date events (initialize) when switching to Calendar Fragment
         calendarEventModel.retrieveEvents(datePicked);
+        long date = calendarView.getDate();
+        calendarView.setDate(date);
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -181,6 +187,20 @@ public class CalendarFragment extends Fragment{
             }
         });
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void resetEvents(int year, int month, int dayOfMonth) {
+        datePicked = year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", dayOfMonth);
+        // Format the picked date
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        SimpleDateFormat sdf = new SimpleDateFormat("E, dd-MM-yyyy", Locale.getDefault());
+        String formattedDate = sdf.format(calendar.getTime());
+        tv_pickedDate.setText(formattedDate);
+        tv_pickedDate.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
+        calendarEventModel.retrieveEvents(datePicked);
+        Log.d(TAG, "Change Date picked to: " + datePicked);
+        Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
     }
 
     private void showAddEventPanel() {

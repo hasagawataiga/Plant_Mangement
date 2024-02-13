@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -79,7 +80,7 @@ public class EventListAdapter extends ArrayAdapter<CalendarEvent>{
 
         // Get the current item from the data list
         CalendarEvent currentEvent = eventList.get(position);
-
+        convertView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_left));
         // Set data to the views
         TextView titleTextView = convertView.findViewById(R.id.title);
         TextView contentTextView = convertView.findViewById(R.id.content);
