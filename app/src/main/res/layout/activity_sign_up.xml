@@ -49,19 +49,20 @@
             android:id="@+id/signUp_et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CEFFDC"
+            android:background="#FFFF8D"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
             android:padding="10dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp"
+            android:shadowRadius="@integer/material_motion_duration_long_2"/>
 
         <EditText
             android:id="@+id/signUp_et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="#CEFFDC"
+            android:background="#FFF4FF81"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:minHeight="48dp"

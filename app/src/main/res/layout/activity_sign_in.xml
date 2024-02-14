@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toTopOf="@+id/signIn_linearLayout_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signIn_tv_activityName" />
+        app:layout_constraintTop_toBottomOf="@id/signIn_tv_activityName"/>
 
 
     <LinearLayout
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="50dp"
+        android:paddingHorizontal="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signIn_tv_tag"
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="#CEFFDC"
+            android:background="#FFFF8D"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="#CEFFDC"
+            android:background="#FFFF8D"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:minHeight="48dp"
@@ -80,22 +80,21 @@
             android:id="@+id/signIn_linearLayout_buttonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_Google_button"
-                android:layout_width="150dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="10dp"
-                android:visibility="gone"
-                app:buttonSize="standard"/>
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/signIn_btn_google"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/white"
+                android:background="@drawable/rounded_panel_background"
                 android:drawableLeft="@drawable/gg_icon"
                 android:onClick="signInGoogle"
                 android:paddingStart="12dp"
@@ -107,23 +106,21 @@
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/sign_in_Facebook_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
                 android:minHeight="48dp"
-                android:padding="8dp"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:visibility="gone"/>
 
-<!--            <Button-->
-<!--                android:id="@+id/signIn_btn_Facebook"-->
-<!--                android:layout_width="150dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:background="@color/white"-->
-<!--                android:drawableLeft="@drawable/fb_icon"-->
-<!--                android:paddingStart="12dp"-->
-<!--                android:text="@string/facebook"-->
-<!--                android:textSize="12dp"-->
-<!--                android:textStyle="bold"/>-->
+            <Button
+                android:id="@+id/signIn_btn_Facebook"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_panel_background"
+                android:drawableLeft="@drawable/fb_icon"
+                android:paddingStart="12dp"
+                android:text="@string/facebook"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 

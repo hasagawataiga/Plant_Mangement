@@ -97,7 +97,7 @@ public class EventListAdapter extends ArrayAdapter<CalendarEvent>{
     private void showRemoveEventDialog(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-//         Inflate custom button layout
+        // Inflate custom button layout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View customButtonsView = inflater.inflate(R.layout.calendar_remove_button_dialog, null);
 
@@ -109,20 +109,12 @@ public class EventListAdapter extends ArrayAdapter<CalendarEvent>{
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeItem(position);
-                dialog.dismiss();
-            }
+        positiveButton.setOnClickListener(v -> {
+            removeItem(position);
+            dialog.dismiss();
         });
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
 
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
     }
 
 

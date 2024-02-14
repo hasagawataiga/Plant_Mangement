@@ -110,34 +110,19 @@ public class CalendarFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_main_layout, container, false);
-
         datePicked = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        // Updated initialization of views for the new layout
-        calendarView = view.findViewById(R.id.calendarView);
-        tv_pickedDate = view.findViewById(R.id.tv_pickedDate);
+        initialView(view);
+
         tv_pickedDate.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
-        eventListView = view.findViewById(R.id.eventListView);
-        overlayBackground = view.findViewById(R.id.overlayBackground);
-        overlayBackground.setVisibility(View.GONE);
-        addEventButton = view.findViewById(R.id.addEventBtn);
         addEventButton.setOnClickListener(v -> showAddEventPanel());
-        addEventPanel = view.findViewById(R.id.addEventPanel);
-        addEventPanel.setVisibility(View.GONE);
-        addedEventTitle = view.findViewById(R.id.et_title);
-        addedEventContent = view.findViewById(R.id.et_content);
-        addBtnPanel = view.findViewById(R.id.addBtnPanel);
+
+        // 2 buttons in Add Event Panel
         addBtnPanel.setOnClickListener(v -> {
             saveEvent();
             closeAddEventPanel();
         });
-        cancelBtnPanel = view.findViewById(R.id.cancelBtnPanel);
         cancelBtnPanel.setOnClickListener(v -> closeAddEventPanel());
-
-        // Hide the display home button as up button
-        MainActivity mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        mainActivity.hideDisplayHomeUp();
 
         // LiveData declaration
         calendarEventModel = new ViewModelProvider(this).get(CalendarEventModel.class);
@@ -159,7 +144,7 @@ public class CalendarFragment extends Fragment{
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             resetEvents(year, month, dayOfMonth);
         });
-        // Inflate the layout for this fragment
+
         return view;
     }
 
@@ -191,6 +176,7 @@ public class CalendarFragment extends Fragment{
 
     private void resetEvents(int year, int month, int dayOfMonth) {
         datePicked = year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", dayOfMonth);
+
         // Format the picked date
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
@@ -198,6 +184,7 @@ public class CalendarFragment extends Fragment{
         String formattedDate = sdf.format(calendar.getTime());
         tv_pickedDate.setText(formattedDate);
         tv_pickedDate.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
+
         calendarEventModel.retrieveEvents(datePicked);
         Log.d(TAG, "Change Date picked to: " + datePicked);
         Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
@@ -219,5 +206,29 @@ public class CalendarFragment extends Fragment{
         Map <String, Object> events = new HashMap<>();
         events.put(name, content);
         calendarEventModel.updateEvents(datePicked, events);
+        addedEventTitle.setText("");
+        addedEventContent.setText("");
+    }
+
+    private void initialView(View view) {
+
+        // Hide the display home button as up button
+        MainActivity mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
+        mainActivity.hideDisplayHomeUp();
+
+        calendarView = view.findViewById(R.id.calendarView);
+
+        tv_pickedDate = view.findViewById(R.id.tv_pickedDate);
+        eventListView = view.findViewById(R.id.eventListView);
+        overlayBackground = view.findViewById(R.id.overlayBackground);
+        overlayBackground.setVisibility(View.GONE);
+        addEventButton = view.findViewById(R.id.addEventBtn);
+        addEventPanel = view.findViewById(R.id.addEventPanel);
+        addEventPanel.setVisibility(View.GONE);
+        addedEventTitle = view.findViewById(R.id.et_title);
+        addedEventContent = view.findViewById(R.id.et_content);
+        addBtnPanel = view.findViewById(R.id.addBtnPanel);
+        cancelBtnPanel = view.findViewById(R.id.cancelBtnPanel);
     }
 }
