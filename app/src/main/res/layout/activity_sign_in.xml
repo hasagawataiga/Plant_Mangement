@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBGColor"
     tools:context=".SignInActivity">
     <TextView
         android:id="@+id/signIn_tv_activityName"
@@ -40,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="15dp"
+        android:paddingHorizontal="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signIn_tv_tag"
@@ -51,9 +50,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="#FFFF8D"
+            android:background="#FAFAC6"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
+            android:textColorHint="#40000000"
             android:minHeight="48dp"
             android:padding="10dp"/>
 
@@ -62,9 +62,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="#FFFF8D"
+            android:background="#FAFAC6"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:textColorHint="#40000000"
             android:minHeight="48dp"
             android:padding="10dp"/>
 
@@ -85,7 +86,7 @@
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_Google_button"
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:visibility="gone"/>
 
@@ -99,14 +100,14 @@
                 android:onClick="signInGoogle"
                 android:paddingStart="12dp"
                 android:text="@string/google"
-                android:textColor="#757575"
-                android:textSize="12dp"
+                android:textColor="#434343"
+                android:textSize="10dp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck" />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/sign_in_Facebook_button"
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:minHeight="48dp"
                 android:visibility="gone"/>
@@ -119,7 +120,8 @@
                 android:drawableLeft="@drawable/fb_icon"
                 android:paddingStart="12dp"
                 android:text="@string/facebook"
-                android:textSize="12dp"
+                android:textColor="#434343"
+                android:textSize="10dp"
                 android:textStyle="bold"/>
 
         </LinearLayout>

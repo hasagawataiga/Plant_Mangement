@@ -6,13 +6,13 @@
     <string name="fb_login_protocol_scheme">fb1141995133132815</string>
     <string name="facebook_client_token">af666d97f3da71371b31d4ea47b1c236</string>
     <string name="sign_up">Sign Up</string>
-    <string name="sign_up_tag">Welcome to Plant Management</string>
+    <string name="sign_up_tag">Created by Tuan Hoang</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="already_register">Already Register?</string>
     <string name="return_to_home">Return to home</string>
     <string name="sign_in">Sign In</string>
-    <string name="sign_in_tag">Welcome to Plant Management</string>
+    <string name="sign_in_tag">Created by Tuan Hoang</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="google">Google</string>
     <string name="facebook">Facebook</string>
@@ -20,7 +20,7 @@
     <string name="new_here">New here?</string>
     <string name="register_now">Register now</string>
     <string name="return_to_sign_in">Return to sign in</string>
-    <string name="reset">Reset</string>
+    <string name="reset">Send email</string>
     <string name="enter_your_email">Enter your email:</string>
     <string-array name="units">
         <item>kg</item>
