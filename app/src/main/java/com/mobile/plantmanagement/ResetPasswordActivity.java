@@ -1,12 +1,14 @@
 package com.mobile.plantmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     Button btn_resetPassword;
     EditText et_email;
     String email;
+    ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         et_email = findViewById(R.id.resetPassword_et_email);
         btn_resetPassword = findViewById(R.id.resetPassword_btn_reset);
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public void resetPassword (View view){
@@ -54,5 +61,20 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void goToSignInActivity(){
+        Intent intent = new Intent(ResetPasswordActivity.this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goToSignInActivity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
