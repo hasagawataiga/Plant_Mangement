@@ -28,7 +28,7 @@ public class CalendarEventModel extends AndroidViewModel {
     private MutableLiveData<Map<String, Object>> selectedDateEvents = new MutableLiveData<>();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private String userUID = FirebaseAuth.getInstance().getUid();
-    private DatabaseReference eventsRef = database.getReference("User").child(userUID).child("Event");
+    private DatabaseReference eventsRef;
     public CalendarEventModel(@NonNull Application application) {
         super(application);
     }
@@ -38,6 +38,9 @@ public class CalendarEventModel extends AndroidViewModel {
     }
 
     public void retrieveEvents(String date) {
+        if (!isLoggedIn(userUID)) {
+            return;
+        }
         eventsRef
                 .child(date)
                 .addValueEventListener(new ValueEventListener() {
@@ -45,8 +48,7 @@ public class CalendarEventModel extends AndroidViewModel {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d(TAG, "Retrieving Events");
                         if (dataSnapshot.exists()) {
-                            GenericTypeIndicator<Map<String, Object>> genericType = new GenericTypeIndicator<Map<String, Object>>() {};
-                            selectedDateEvents.setValue(dataSnapshot.getValue(genericType));
+                            selectedDateEvents.setValue(dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Object>>() {}));
                             Log.d(TAG, "Retrieve Events Successful");
                         } else {
                             selectedDateEvents.setValue(null);
@@ -63,151 +65,37 @@ public class CalendarEventModel extends AndroidViewModel {
     }
 
     public void updateEvents(String date, Map<String, Object> events) {
-        eventsRef
-                .child(date)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    // Date node does not exist, create a new one
-                    eventsRef
-                            .child(date)
-                            .setValue(events)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getApplication().getBaseContext(), "Events saved", Toast.LENGTH_SHORT).show();
-                                    Log.d("CalendarViewModel", "Events saved for date: " + date);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplication().getBaseContext(), "Error saving events", Toast.LENGTH_SHORT).show();
-                                    Log.e("CalendarViewModel", "Error saving events for date: " + date, e);
-                                }
-                            });
-                } else {
-                    // Date node already exists, update the events under this date
-                    eventsRef
-                            .child(date)
-                            .updateChildren(events)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getApplication().getBaseContext(), "Events updated", Toast.LENGTH_SHORT).show();
-                                    Log.d("CalendarViewModel", "Events updated for date: " + date);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplication().getBaseContext(), "Error updating events", Toast.LENGTH_SHORT).show();
-                                    Log.e("CalendarViewModel", "Error updating events for date: " + date, e);
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle potential errors
-                Log.e("CalendarViewModel", "Database Error: " + databaseError.getMessage());
-            }
-        });
+        if (!isLoggedIn(userUID)) {
+            return;
+        }
+        eventsRef.child(date).setValue(events)
+                .addOnSuccessListener(aVoid -> showToast("Events saved"))
+                .addOnFailureListener(e -> handleDatabaseError(e, "Error saving events"));
     }
 
     public void deleteEvent(String date, CalendarEvent event) {
-        eventsRef
-                .child(date)
-                .child(event.getTitle())
-                .removeValue()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplication().getBaseContext(), "Event removed", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "Event removed: " + event.getTitle() + " from date: " + date);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplication().getBaseContext(), "Error removing event", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Error removing event: " + event.getTitle() + " from date: " + date, e);
-                    }
-                });
+        if (!isLoggedIn(userUID)) {
+            return;
+        }
+        eventsRef.child(date).child(event.getTitle()).removeValue()
+                .addOnSuccessListener(aVoid -> showToast("Event removed: " + event.getTitle() + " from date: " + date))
+                .addOnFailureListener(e -> handleDatabaseError(e, "Error removing event: " + event.getTitle() + " from date: " + date));
     }
-//    public void retrieveNotes(String date){
-//        notesCollection
-//                .document(date)
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        if (documentSnapshot.exists()) {
-//                            selectedDateNotes.setValue((Map<String, Object>) documentSnapshot.getData());
-//                            Log.d(TAG, selectedDateNotes.toString());
-//                        } else {
-//                            selectedDateNotes.setValue(null);
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        selectedDateNotes.setValue(null);
-//                        Log.d(TAG, "Error retrieving notes", e);
-//                    }
-//                });
-//    }
-//
-//    public void retrieveEvents(String date) {
-//        calendarCollection
-//                .document(date)
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        if (documentSnapshot.exists()) {
-//                            selectedDateEvents.setValue((Map<String, Object>) documentSnapshot.getData());
-//                            Log.d(TAG, selectedDateEvents.toString());
-//                        } else {
-//                            selectedDateEvents.setValue(null);
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        selectedDateEvents.setValue(null);
-//                        Log.d(TAG, "Error retrieving events", e);
-//                    }
-//                });
-//    }
-//
-//    public void updateNotes(String date, Map<String, Object> notes){
-//        notesCollection
-//                .document(date)
-//                .set(notes)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Toast.makeText(getApplication().getBaseContext(), "Notes saved", Toast.LENGTH_SHORT).show();
-//                        Log.d("CalendarViewModel", "Notes saved");
-//                    }
-//                });
-//    }
-//
-//    public void updateEvents(String date, Map<String, Object> events) {
-//        calendarCollection
-//                .document(date)
-//                .set(events)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Toast.makeText(getApplication().getBaseContext(), "Event saved", Toast.LENGTH_SHORT).show();
-//                        Log.d("CalendarViewModel", "Events saved");
-//                    }
-//                });
-//    }
+
+    private boolean isLoggedIn(String userUID) {
+        if (userUID == null) {
+            return false;
+        }
+        eventsRef = database.getReference("User").child(userUID).child("Event");
+        return true;
+    }
+
+    private void handleDatabaseError(Exception e, String message) {
+        showToast("Database Error: " + e.getMessage());
+        Log.e(TAG, message, e);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+    }
 }

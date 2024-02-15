@@ -125,7 +125,8 @@ public class CalendarFragment extends Fragment{
         cancelBtnPanel.setOnClickListener(v -> closeAddEventPanel());
 
         // LiveData declaration
-        calendarEventModel = new ViewModelProvider(this).get(CalendarEventModel.class);
+        ViewModelProvider.Factory factory = (ViewModelProvider.Factory) ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
+        calendarEventModel = new ViewModelProvider(this, factory).get(CalendarEventModel.class);
         calendarEventModel.getSelectedDateEvents().observe(getViewLifecycleOwner(), events -> {
             eventListAdapter.setDate(datePicked);
             eventListAdapter.removeAll();
