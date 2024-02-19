@@ -1,0 +1,238 @@
+<!-- profile_fragment.xml -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="32dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!-- Profile Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_gravity="left"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Profile Image -->
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/humidity_icon"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+                <EditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:hint="Enter name"
+                    android:enabled="false"
+                    android:background="@drawable/rounded_edit_text"
+                    android:paddingStart="10dp"
+                    android:paddingVertical="10dp"
+                    android:layout_alignParentStart="true"/>
+                <ImageView
+                    android:id="@+id/iv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_edit_24"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitCenter"
+                    android:layout_marginEnd="10dp"/>
+            </RelativeLayout>
+<!--            <EditText-->
+<!--                android:id="@+id/et_name"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="3"-->
+<!--                android:hint="Enter name"-->
+<!--                android:enabled="false"-->
+<!--                android:drawableEnd="@drawable/baseline_edit_24"-->
+<!--                android:background="@drawable/rounded_edit_text"-->
+<!--                android:paddingStart="10dp"/>-->
+        </LinearLayout>
+
+        <!-- Phone Number -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_phoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Enter phone number"
+                android:enabled="false"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="8dp"/>
+        </LinearLayout>
+
+        <!-- Email -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Enter email"
+                android:enabled="false"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="8dp"/>
+        </LinearLayout>
+
+        <!-- Street -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Street"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_street"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Enter street"
+                android:enabled="false"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="8dp"/>
+        </LinearLayout>
+
+        <!-- Apartment-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apartment"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_apartment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Enter apartment"
+                android:enabled="false"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="8dp"/>
+        </LinearLayout>
+
+        <!-- House Number-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="House Number"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/et_houseNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Enter house number"
+                android:enabled="false"
+                android:drawableEnd="@drawable/baseline_edit_24"
+                android:drawablePadding="8dp"/>
+        </LinearLayout>
+
+        <!-- Buttons Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginHorizontal="30dp">
+
+            <Button
+                android:id="@+id/save_changes_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Changes"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/logout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log Out"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>
