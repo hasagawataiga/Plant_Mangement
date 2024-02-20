@@ -7,28 +7,19 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="20dp">
-        <ImageView
-            android:id="@+id/main_imageView_user_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"/>
         <TextView
             android:id="@+id/main_tv_display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_gravity="center_vertical"
             android:textSize="12sp"/>
+        <ImageView
+            android:id="@+id/main_imageView_user_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/main_tv_sign_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Out"
-        android:textSize="12sp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginVertical="8dp"
-        android:layout_marginEnd="10dp"/>
 
 </RelativeLayout>

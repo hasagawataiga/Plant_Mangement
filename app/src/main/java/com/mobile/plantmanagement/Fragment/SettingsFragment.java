@@ -29,8 +29,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         notification = findPreference("notification_settings");
         aboutUs = findPreference("about_us");
         version = findPreference("app_version");
-        // Check the theme settings at the beginning whether dark mode is enabled, and set the title of SwitchPreferenceCompat accordingly to the theme settings
-//        isDarkMode();
 
         // Declare application version to version preference
         String versionName = BuildConfig.VERSION_NAME;
@@ -60,25 +58,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             }
         });
 
-//        appMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//            @Override
-//            public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-//                boolean isChecked = false;
-//                if(newValue instanceof Boolean){
-//                    isChecked = ((Boolean) newValue).booleanValue();
-//                }
-//                if(isChecked){
-//                    appMode.setTitle("Dark Mode");
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//                    Log.d(TAG, "Switch to dark");
-//                }else{
-//                    appMode.setTitle("Light Mode");
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//                    Log.d(TAG, "Switch to light");
-//                }
-//                return true;
-//            }
-//        });
     }
 
     @NonNull

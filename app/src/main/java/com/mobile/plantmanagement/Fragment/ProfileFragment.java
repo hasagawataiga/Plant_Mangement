@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mobile.plantmanagement.Account.UserAccount;
 import com.mobile.plantmanagement.Account.UserAccountModel;
 import com.mobile.plantmanagement.Calendar.CalendarEventModel;
@@ -37,6 +39,8 @@ public class ProfileFragment extends Fragment {
 
     private UserAccountModel userAccountModel;
     private UserAccount userInfo;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
     private SettingProfileBinding settingProfileBinding;
 
     // TODO: Rename and change types of parameters
@@ -82,7 +86,8 @@ public class ProfileFragment extends Fragment {
         View view = settingProfileBinding.getRoot();
 
         userInfo = new UserAccount();
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         // User Account liveDate declaration
         ViewModelProvider.Factory factory = (ViewModelProvider.Factory) ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         userAccountModel = new ViewModelProvider(this, factory).get(UserAccountModel.class);
@@ -100,7 +105,47 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding.ivName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingProfileBinding.etName.setEnabled(true);
+                v.setEnabled(true);
+                Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
+                settingProfileBinding.saveChangesButton.setEnabled(true);
+            }
+        });
+        settingProfileBinding.ivEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(true);
+                Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
+                settingProfileBinding.saveChangesButton.setEnabled(true);
+            }
+        });
+        settingProfileBinding.ivStreet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(true);
+                Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
+                settingProfileBinding.saveChangesButton.setEnabled(true);
+            }
+        });
+        settingProfileBinding.ivPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(true);
+                Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
+                settingProfileBinding.saveChangesButton.setEnabled(true);
+            }
+        });
+        settingProfileBinding.ivApartment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(true);
+                Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
+                settingProfileBinding.saveChangesButton.setEnabled(true);
+            }
+        });
+        settingProfileBinding.ivPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
@@ -115,10 +160,19 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        settingProfileBinding.logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
 
     private void updateUserInfoView() {
+        if (userInfo == null) {
+            userInfo = new UserAccount();
+        }
         settingProfileBinding.etName.setText(userInfo.getName());
         settingProfileBinding.etEmail.setText(userInfo.getEmail());
         settingProfileBinding.etPhoneNumber.setText(userInfo.getPhoneNumber());
