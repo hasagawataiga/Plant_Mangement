@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
@@ -200,20 +201,21 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         try {
             date = inputFormat.parse(timeString);
         } catch (ParseException e) {
-            e.printStackTrace(); // Handle the parsing exception appropriately
+            e.printStackTrace();
             return;
         }
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
         updated_at = dayFormat.format(date);
 
         description = weatherData.getDescriptionLabel();
-        temperature = String.format("%.2f", weatherData.getTemp());
-        min_temperature = String.format("%.2f", weatherData.getTempMin());
-        max_temperature = String.format("%.2f", weatherData.getTempMax());
+        temperature = Integer.toString((int) weatherData.getTemp());
+        min_temperature = String.format("%.1f", weatherData.getTempMin());
+        max_temperature = String.format("%.1f", weatherData.getTempMax());
         pressure = weatherData.getPressure();
         wind_speed = String.format("%.2f", weatherData.getWindSpeed());
         humidity = weatherData.getHumidity();
         weatherActivityHomeBinding.layout.nameTv.setText(name);
+        weatherActivityHomeBinding.layout.nameTv.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
         weatherActivityHomeBinding.layout.updatedAtTv.setText(updated_at);
         weatherActivityHomeBinding.layout.conditionDescTv.setText(description);
         weatherActivityHomeBinding.layout.tempTv.setText(temperature + "°C");
@@ -222,6 +224,7 @@ public class WeatherFragment extends Fragment implements WeatherCallback {
         weatherActivityHomeBinding.layout.pressureTv.setText(pressure + " mb");
         weatherActivityHomeBinding.layout.windTv.setText(wind_speed + " km/h");
         weatherActivityHomeBinding.layout.humidityTv.setText(humidity + "%");
+        weatherActivityHomeBinding.dayRv.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up));
         Log.i(TAG, "UI updated: " + name);
     }
 

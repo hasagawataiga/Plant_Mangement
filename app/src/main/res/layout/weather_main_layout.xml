@@ -36,7 +36,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@string/mic_desc"
                 android:scaleType="fitCenter"
-                android:src="@drawable/nion_mic_icon" />
+                android:src="@drawable/mic_icon" />
 
             <EditText
                 android:id="@+id/city_et"
@@ -94,7 +94,6 @@
                 android:id="@+id/name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/koho_regular"
                 android:text=""
                 android:textAllCaps="true"
                 android:textColor="@color/textColor"
@@ -110,18 +109,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/koho_regular"
                     android:letterSpacing="0.1"
                     android:text="@string/updated_at"
                     android:textColor="@color/textColor"
-                    android:textSize="8sp" />
+                    android:textSize="8sp"/>
 
                 <TextView
                     android:id="@+id/updated_at_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-4dp"
-                    android:fontFamily="@font/koho_regular"
                     android:letterSpacing="0.1"
                     android:text=""
                     android:textAllCaps="true"
