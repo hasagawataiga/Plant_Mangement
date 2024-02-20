@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,9 +22,11 @@ import com.mobile.plantmanagement.Account.UserAccountModel;
 import com.mobile.plantmanagement.Calendar.CalendarEventModel;
 import com.mobile.plantmanagement.R;
 import com.mobile.plantmanagement.databinding.SettingProfileBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +40,7 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private final String TAG = "SETTING_PROFILE";
     private UserAccountModel userAccountModel;
     private UserAccount userInfo;
     private FirebaseAuth firebaseAuth;
@@ -85,6 +89,9 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding = SettingProfileBinding.inflate(inflater, container, false);
         View view = settingProfileBinding.getRoot();
 
+        // Loading Spinner at the beginning
+        showLoadingSpinner();
+
         userInfo = new UserAccount();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -95,6 +102,7 @@ public class ProfileFragment extends Fragment {
             userInfo = userAccountModel.getUserInfo().getValue();
             updateUserInfoView();
         });
+        hideLoadingSpinner();
         return view;
     }
 
@@ -105,7 +113,7 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding.ivName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setEnabled(true);
+                settingProfileBinding.etName.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
@@ -113,7 +121,7 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding.ivEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setEnabled(true);
+                settingProfileBinding.etEmail.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
@@ -121,7 +129,7 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding.ivStreet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setEnabled(true);
+                settingProfileBinding.etStreet.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
@@ -129,7 +137,7 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding.ivPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setEnabled(true);
+                settingProfileBinding.etPhoneNumber.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
@@ -137,15 +145,15 @@ public class ProfileFragment extends Fragment {
         settingProfileBinding.ivApartment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setEnabled(true);
+                settingProfileBinding.etApartment.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
         });
-        settingProfileBinding.ivPhoneNumber.setOnClickListener(new View.OnClickListener() {
+        settingProfileBinding.ivHouseNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setEnabled(true);
+                settingProfileBinding.etHouseNumber.setEnabled(true);
                 Toast.makeText(getContext(), "Edit text is enabled", Toast.LENGTH_SHORT).show();
                 settingProfileBinding.saveChangesButton.setEnabled(true);
             }
@@ -173,15 +181,26 @@ public class ProfileFragment extends Fragment {
         if (userInfo == null) {
             userInfo = new UserAccount();
         }
+        try{
+            Picasso.get()
+                    .load(getUserIcon(firebaseUser))
+                    .into(settingProfileBinding.profileImage);
+            Log.d(TAG, "Get user icon successfully.");
+        } catch (Exception e){
+            settingProfileBinding.profileImage.setImageResource(R.drawable.ic_round_tag_faces_24);
+            Log.d(TAG, "Get user icon failed.");
+        }
         settingProfileBinding.etName.setText(userInfo.getName());
         settingProfileBinding.etEmail.setText(userInfo.getEmail());
         settingProfileBinding.etPhoneNumber.setText(userInfo.getPhoneNumber());
         settingProfileBinding.etStreet.setText(userInfo.getStreet());
         settingProfileBinding.etApartment.setText(userInfo.getApartment());
         settingProfileBinding.etHouseNumber.setText(userInfo.getHouseNumber());
+        hideLoadingSpinner();
     }
 
     private void saveChangesUserInfo() {
+        showLoadingSpinner();
         String name = settingProfileBinding.etName.getText().toString();
         String email = settingProfileBinding.etEmail.getText().toString();
         String phoneNumber = settingProfileBinding.etPhoneNumber.getText().toString();
@@ -190,6 +209,7 @@ public class ProfileFragment extends Fragment {
         String houseNumber = settingProfileBinding.etHouseNumber.getText().toString();
         userInfo = new UserAccount(name, email, phoneNumber, street, apartment, houseNumber);
         userAccountModel.updateUserInfo(userInfo);
+        hideLoadingSpinner();
     }
 
     private void disabledEditText() {
@@ -203,5 +223,20 @@ public class ProfileFragment extends Fragment {
 
     private void disabledSaveChangesButton() {
         settingProfileBinding.saveChangesButton.setEnabled(false);
+    }
+
+    private String getUserIcon(FirebaseUser user) {
+        if (user != null) {
+            return Objects.requireNonNull(user.getPhotoUrl()).toString();
+        }
+        return null;
+    }
+
+    private void showLoadingSpinner() {
+        settingProfileBinding.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingSpinner() {
+        settingProfileBinding.progressBar.setVisibility(View.GONE);
     }
 }
