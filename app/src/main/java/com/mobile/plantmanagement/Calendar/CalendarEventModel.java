@@ -68,7 +68,7 @@ public class CalendarEventModel extends AndroidViewModel {
         if (!isLoggedIn(userUID)) {
             return;
         }
-        eventsRef.child(date).setValue(events)
+        eventsRef.child(date).updateChildren(events)
                 .addOnSuccessListener(aVoid -> showToast("Events saved"))
                 .addOnFailureListener(e -> handleDatabaseError(e, "Error saving events"));
     }

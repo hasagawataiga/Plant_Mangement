@@ -66,6 +66,7 @@ public class CalendarFragment extends Fragment{
     EditText addedEventContent;
     Button addBtnPanel;
     Button cancelBtnPanel;
+    LinearLayout eventListContainer;
 
     private CalendarEventModel calendarEventModel;
     private EventListAdapter eventListAdapter;
@@ -115,6 +116,8 @@ public class CalendarFragment extends Fragment{
         initialView(view);
 
         tv_pickedDate.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
+        eventListContainer.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up));
+
         addEventButton.setOnClickListener(v -> showAddEventPanel());
 
         // 2 buttons in Add Event Panel
@@ -185,7 +188,7 @@ public class CalendarFragment extends Fragment{
         String formattedDate = sdf.format(calendar.getTime());
         tv_pickedDate.setText(formattedDate);
         tv_pickedDate.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right));
-
+        eventListContainer.setAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up));
         calendarEventModel.retrieveEvents(datePicked);
         Log.d(TAG, "Change Date picked to: " + datePicked);
         Toast.makeText(getContext(),datePicked,Toast.LENGTH_SHORT).show();
@@ -221,6 +224,7 @@ public class CalendarFragment extends Fragment{
         calendarView = view.findViewById(R.id.calendarView);
 
         tv_pickedDate = view.findViewById(R.id.tv_pickedDate);
+        eventListContainer = view.findViewById(R.id.eventList_container);
         eventListView = view.findViewById(R.id.eventListView);
         overlayBackground = view.findViewById(R.id.overlayBackground);
         overlayBackground.setVisibility(View.GONE);
