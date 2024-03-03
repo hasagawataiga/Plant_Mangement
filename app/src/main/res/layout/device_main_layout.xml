@@ -48,8 +48,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="25dp"
             android:paddingTop="25dp"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="1dp"/>
+            android:divider="@null" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingVertical="5dp">
 
-    <LinearLayout
-        android:id="@+id/device_name_container"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintWidth_percent="0.8"
+        android:background="@drawable/rounded_item_background"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <TextView
-            android:id="@+id/device_name"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center">
+        <LinearLayout
+            android:id="@+id/device_name_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Device Name"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/device_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status: Good"/>
-    </LinearLayout>
+            android:orientation="vertical"
+            android:paddingStart="25dp"
+            android:paddingVertical="10dp"
+>
+            <TextView
+                android:id="@+id/device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Device Name"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/device_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: Good"/>
+        </LinearLayout>
 
-    <Switch
-        android:id="@+id/device_switch_btn"
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="@id/device_name_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Switch
+            android:id="@+id/device_switch_btn"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:paddingEnd="10dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
