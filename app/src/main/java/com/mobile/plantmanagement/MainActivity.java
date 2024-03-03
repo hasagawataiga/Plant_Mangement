@@ -5,7 +5,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mobile.plantmanagement.Fragment.ChartFragment;
+import com.mobile.plantmanagement.Fragment.DeviceFragment;
 import com.mobile.plantmanagement.Fragment.CalendarFragment;
 import com.mobile.plantmanagement.Fragment.WeatherFragment;
 import com.mobile.plantmanagement.Fragment.SettingsFragment;
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
                     break;
                 case R.id.chart:
                     Log.d(TAG, "Binding Click Chart fragment");
-                    changeFragment(new ChartFragment());
+                    changeFragment(new DeviceFragment());
                     break;
                 case R.id.settings:
                     Log.d(TAG, "Binding Click Settings fragment");

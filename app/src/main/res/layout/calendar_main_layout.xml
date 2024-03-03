@@ -21,7 +21,8 @@
             android:layout_height="match_parent"
             android:text="@string/calendar"
             android:textAllCaps="true"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <!-- CalendarView -->
