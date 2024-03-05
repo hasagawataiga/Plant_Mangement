@@ -2,12 +2,14 @@ package com.mobile.plantmanagement;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +49,7 @@ public class SignInActivity extends AppCompatActivity {
     LoginButton sign_in_Facebook_button;
     Button btn_login;
     TextView tv_goToRegister;
+    ActionBar actionBar;
 
     // Firebase instance
     FirebaseAuth firebaseAuth;
@@ -76,8 +79,10 @@ public class SignInActivity extends AppCompatActivity {
         tv_forgotPassword = findViewById(R.id.signIn_tv_forgotPassword);
         btn_google = findViewById(R.id.signIn_btn_google);
         btn_facebook = findViewById(R.id.signIn_btn_Facebook);
-
-
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         btn_login = findViewById(R.id.btn_login);
         tv_goToRegister = findViewById(R.id.signIn_tv_goToRegister);
         tv_forgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -251,4 +256,13 @@ public class SignInActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goToMainActivity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

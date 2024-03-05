@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             });
         } else {
             actionBar.setCustomView(R.layout.user_info_action_bar);
-            TextView tv_sign_out = findViewById(R.id.main_tv_sign_out);
+//            TextView tv_sign_out = findViewById(R.id.main_tv_sign_out);
             ImageView imageView_user_icon = findViewById(R.id.main_imageView_user_icon);
             try{
                 Picasso.get()
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             TextView tv_displayName = findViewById(R.id.main_tv_display_name);
             tv_displayName.setText(getUserDisplayName(user));
             Log.d(TAG, "user's displayName: " + tv_displayName.getText().toString());
-            tv_sign_out.setOnClickListener(v -> signOut());
+//            tv_sign_out.setOnClickListener(v -> signOut());
         }
     }
     private String getUserDisplayName(FirebaseUser user) {

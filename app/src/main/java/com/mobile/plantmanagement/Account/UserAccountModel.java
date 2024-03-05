@@ -1,4 +1,4 @@
-package com.mobile.plantmanagement.Calendar;
+package com.mobile.plantmanagement.Account;
 
 import android.app.Application;
 import android.util.Log;
@@ -8,85 +8,79 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.mobile.plantmanagement.Calendar.CalendarEvent;
+import com.mobile.plantmanagement.UserModel;
 
 import java.util.Map;
 
-public class CalendarEventModel extends AndroidViewModel {
-    private final String TAG = "CALENDAR_VIEW_MODEL";
+public class UserAccountModel extends AndroidViewModel {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private MutableLiveData<Map<String, Object>> selectedDateEvents = new MutableLiveData<>();
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final String TAG = "USER_ACCOUNT";
     private String userUID = FirebaseAuth.getInstance().getUid();
-    private DatabaseReference eventsRef;
-    public CalendarEventModel(@NonNull Application application) {
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference userInfoRef;
+    private MutableLiveData<UserAccount> userInfo = new MutableLiveData<>();
+
+    public UserAccountModel(@NonNull Application application) {
         super(application);
     }
 
-    public MutableLiveData<Map<String, Object>> getSelectedDateEvents() {
-        return selectedDateEvents;
+    public MutableLiveData<UserAccount> getUserInfo() {
+        return userInfo;
     }
 
-    public void retrieveEvents(String date) {
+    public void retrieveInfo() {
         if (!isLoggedIn(userUID)) {
             return;
         }
-        eventsRef
-                .child(date)
+        userInfoRef
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d(TAG, "Retrieving Events");
                         if (dataSnapshot.exists()) {
-                            selectedDateEvents.setValue(dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Object>>() {}));
+                            UserAccount userAccount = dataSnapshot.getValue(UserAccount.class);
+                            userInfo.setValue(userAccount);
                             Log.d(TAG, "Retrieve Events Successful");
                         } else {
-                            selectedDateEvents.setValue(null);
+                            userInfo.setValue(null);
                             Log.d(TAG, "Retrieve Events Failed");
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        selectedDateEvents.setValue(null);
+                        userInfo.setValue(null);
                         Log.d(TAG, "Error retrieving events", databaseError.toException());
                     }
                 });
     }
 
-    public void updateEvents(String date, Map<String, Object> events) {
+    public void updateUserInfo(UserAccount userInfo) {
         if (!isLoggedIn(userUID)) {
             return;
         }
-        eventsRef.child(date).updateChildren(events)
+        userInfoRef.setValue(userInfo)
                 .addOnSuccessListener(aVoid -> showToast("Events saved"))
                 .addOnFailureListener(e -> handleDatabaseError(e, "Error saving events"));
     }
 
-    public void deleteEvent(String date, CalendarEvent event) {
-        if (!isLoggedIn(userUID)) {
-            return;
-        }
-        eventsRef.child(date).child(event.getTitle()).removeValue()
-                .addOnSuccessListener(aVoid -> showToast("Event removed: " + event.getTitle() + " from date: " + date))
-                .addOnFailureListener(e -> handleDatabaseError(e, "Error removing event: " + event.getTitle() + " from date: " + date));
-    }
-
     private boolean isLoggedIn(String userUID) {
         if (userUID == null) {
+            Log.d(TAG, "User is not found");
             return false;
         }
-        eventsRef = database.getReference("User").child(userUID).child("Event");
+        userInfoRef = database.getReference("User").child(userUID).child("Info");
+        Log.d(TAG, "User is logged");
         return true;
     }
 

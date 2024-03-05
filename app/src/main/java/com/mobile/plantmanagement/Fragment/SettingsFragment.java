@@ -20,23 +20,31 @@ import com.mobile.plantmanagement.MainActivity;
 import com.mobile.plantmanagement.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat{
-
-    SwitchPreferenceCompat appMode;
-    Preference aboutUs;
-    EditTextPreference version;
+    Preference profile, notification, aboutUs, version;
     final String TAG = "Settings";
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        appMode = findPreference("appMode");
-        aboutUs = findPreference("aboutUs");
-        version = findPreference("version");
-        // Check the theme settings at the beginning whether dark mode is enabled, and set the title of SwitchPreferenceCompat accordingly to the theme settings
-        isDarkMode();
+        profile = findPreference("profile_info");
+        notification = findPreference("notification_settings");
+        aboutUs = findPreference("about_us");
+        version = findPreference("app_version");
 
         // Declare application version to version preference
         String versionName = BuildConfig.VERSION_NAME;
         version.setSummary((CharSequence) versionName);
+
+        profile.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(@NonNull Preference preference) {
+                Fragment profileFragment = new ProfileFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameLayout1, profileFragment, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+                return false;
+            }
+        });
 
         aboutUs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -50,25 +58,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             }
         });
 
-        appMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-                boolean isChecked = false;
-                if(newValue instanceof Boolean){
-                    isChecked = ((Boolean) newValue).booleanValue();
-                }
-                if(isChecked){
-                    appMode.setTitle("Dark Mode");
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    Log.d(TAG, "Switch to dark");
-                }else{
-                    appMode.setTitle("Light Mode");
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    Log.d(TAG, "Switch to light");
-                }
-                return true;
-            }
-        });
     }
 
     @NonNull
@@ -79,16 +68,16 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    private void isDarkMode (){
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
-            appMode.setTitle("Dark Mode");
-            appMode.setChecked(true);
-            Log.d(TAG, "Currently selected: Dark Mode");
-        }else{
-            appMode.setTitle("Light Mode");
-            appMode.setChecked(false);
-            Log.d(TAG, "Currently selected: Light Mode");
-        }
-    }
+//    private void isDarkMode (){
+//        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+//            appMode.setTitle("Dark Mode");
+//            appMode.setChecked(true);
+//            Log.d(TAG, "Currently selected: Dark Mode");
+//        }else{
+//            appMode.setTitle("Light Mode");
+//            appMode.setChecked(false);
+//            Log.d(TAG, "Currently selected: Light Mode");
+//        }
+//    }
 
 }

@@ -1,6 +1,7 @@
 package com.mobile.plantmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
     String passwordInput;
     Button btn_register;
     TextView tv_returnSignIn;
+    ActionBar actionBar;
 
     // Firebase instance
     FirebaseAuth firebaseAuth;
@@ -42,7 +45,10 @@ public class SignUpActivity extends AppCompatActivity {
         et_password = findViewById(R.id.signUp_et_password);
         btn_register = findViewById(R.id.signUp_btn_register);
         tv_returnSignIn = findViewById(R.id.signUp_tv_returnSignIn);
-
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         // Email SignIn
         firebaseAuth = FirebaseAuth.getInstance();
     }
@@ -86,5 +92,20 @@ public class SignUpActivity extends AppCompatActivity {
     public void goToSignIn (View view){
         Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
         startActivity(intent);
+    }
+
+    private void goToMainActivity(){
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goToMainActivity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
